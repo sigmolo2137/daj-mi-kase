@@ -20,6 +20,7 @@
       --text-color: #000;
       --button-bg: #FF813F;
       --button-hover: #e67300;
+      --emoji-size: 2rem;
     }
 
     .dark {
@@ -50,7 +51,7 @@
       justify-content: center;
       text-align: center;
       overflow: hidden;
-      padding: 2rem 1rem;
+      padding: 2rem 1rem 4rem;
       transition: background 0.3s ease, color 0.3s ease;
       min-height: 100vh;
       position: relative;
@@ -82,16 +83,77 @@
       transition: background 0.3s ease;
       z-index: 2;
       margin-bottom: 1rem;
+      animation: pulse 2.5s infinite;
+      user-select: none;
     }
 
     .money-button:hover {
       background: var(--button-hover);
+      animation-play-state: paused;
     }
 
-    .counter {
-      margin-top: 1rem;
-      font-size: clamp(0.9rem, 3vw, 1.1rem);
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 129, 63, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 15px 5px rgba(255, 129, 63, 0.4);
+      }
+    }
+
+    .quote {
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      max-width: 600px;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .dark .quote {
+      color: #ccc;
+    }
+
+    .emoji-reacts {
+      margin-bottom: 2rem;
+      user-select: none;
+    }
+
+    .emoji {
+      font-size: var(--emoji-size);
+      cursor: pointer;
+      margin: 0 0.5rem;
+      transition: transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .emoji:hover {
+      transform: scale(1.3);
+    }
+
+    .emoji-count {
       font-weight: bold;
+      margin-left: 0.4rem;
+      font-size: 1rem;
+      vertical-align: middle;
+    }
+
+    .socials {
+      position: absolute;
+      bottom: 2.5rem;
+      display: flex;
+      gap: 1.5rem;
+      font-size: 1.5rem;
+      user-select: none;
+    }
+
+    .socials a {
+      color: var(--text-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .socials a:hover {
+      color: var(--button-hover);
     }
 
     .theme-toggle {
@@ -106,6 +168,7 @@
       cursor: pointer;
       font-size: 0.9rem;
       z-index: 5;
+      user-select: none;
     }
 
     .theme-toggle:hover {
@@ -134,11 +197,25 @@
     Bo każda złotówka wysłana to +1 do karmicznego EQ.
   </p>
 
-  <a href="https://buycoffee.to/olekkosciuczyk" class="money-button" target="_blank" rel="noopener noreferrer">
+  <div class="quote" id="quote">Loading...</div>
+
+  <a href="https://buycoffee.to/olekkosciuczyk" class="money-button" target="_blank" rel="noopener noreferrer" id="donate-btn">
     💰 wpłać mi 5 złoty
   </a>
 
+  <div class="emoji-reacts">
+    <span class="emoji" data-emoji="🔥" title="Ogień!">🔥<span class="emoji-count" id="count-fire">0</span></span>
+    <span class="emoji" data-emoji="💎" title="Diament!">💎<span class="emoji-count" id="count-diamond">0</span></span>
+    <span class="emoji" data-emoji="🚀" title="Rakieta!">🚀<span class="emoji-count" id="count-rocket">0</span></span>
+  </div>
+
   <div class="counter">Już <span id="counter">69</span> osób dało mi hajs 💰</div>
+
+  <div class="socials" aria-label="Social media">
+    <a href="https://instagram.com/_sigmolocix_" target="_blank" rel="noopener noreferrer" title="Instagram _sigmolocix_">
+      📸
+    </a>
+  </div>
 
   <footer>
     &copy; 2025 Olek Kościuczyk. Wszelkie prawa zastrzeżone.
@@ -168,12 +245,41 @@
       }
     }
 
-    // Licznik
+    // Cytaty o hojności
+    const quotes = [
+      "Szczodrość to język, który głusi mogą słyszeć, a niewidomi widzieć. — Mark Twain",
+      "Nie bogactwo, ale szczodrość czyni człowieka wielkim. — Seneka",
+      "Dając, otrzymujemy podwójnie. — Antoni Czechow",
+      "Karma wraca, więc wpłać i zarób plusa! 😉",
+      "Najlepsza inwestycja? Dobra energia i trochę hajsu dla mnie.",
+      "Dziel się bogactwem, a świat stanie się jaśniejszy."
+    ];
+
+    const quoteEl = document.getElementById('quote');
+    function randomQuote() {
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteEl.textContent = q;
+    }
+    randomQuote();
+
+    // Emoji react
+    const emojis = document.querySelectorAll('.emoji');
+    emojis.forEach(emoji => {
+      emoji.addEventListener('click', () => {
+        const countSpan = emoji.querySelector('.emoji-count');
+        let count = parseInt(countSpan.textContent);
+        count++;
+        countSpan.textContent = count;
+      });
+    });
+
+    // Licznik wpłat
     const count = document.getElementById('counter');
     let value = parseInt(localStorage.getItem('donationCount') || 69);
     value += Math.floor(Math.random() * 3);
     count.textContent = value;
     localStorage.setItem('donationCount', value);
+
   </script>
 </body>
 </html>
