@@ -2,12 +2,18 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>daj mi swoje pieniądze</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
     }
 
     body {
@@ -18,20 +24,19 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
       text-align: center;
       overflow: hidden;
-      padding: 2rem;
+      padding: 2rem 1rem;
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: clamp(2rem, 6vw, 3rem);
       margin-bottom: 1rem;
       text-shadow: 2px 2px #fff;
     }
 
     p {
-      font-size: 1.3rem;
+      font-size: clamp(1rem, 4vw, 1.4rem);
       margin-bottom: 1.5rem;
       max-width: 600px;
     }
@@ -44,7 +49,7 @@
       border-radius: 50px;
       font-weight: bold;
       text-decoration: none;
-      font-size: 1.2rem;
+      font-size: clamp(1rem, 4vw, 1.2rem);
       cursor: pointer;
       transition: background 0.3s ease;
       z-index: 2;
@@ -56,7 +61,7 @@
 
     .counter {
       margin-top: 1rem;
-      font-size: 1.1rem;
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
       font-weight: bold;
     }
 
@@ -79,12 +84,6 @@
         opacity: 0;
       }
     }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 2rem; }
-      p { font-size: 1rem; }
-      .money-button { padding: 0.8rem 1.5rem; font-size: 1rem; }
-    }
   </style>
 </head>
 <body>
@@ -95,11 +94,11 @@
     Bo każda złotówka wysłana to +1 do karmicznego EQ.
   </p>
 
-  <a href="https://buycoffee.to//olekkosciuczyk" class="money-button" target="_blank" rel="noopener noreferrer">
+  <a href="https://www.buymeacoffee.com/olekkosciuczyk" class="money-button" target="_blank" rel="noopener noreferrer">
     ☕ Daj mi pieniądze
   </a>
 
-  <div class="counter">Już <span id="counter">5</span> osób dało mi hajs 💰</div>
+  <div class="counter">Już <span id="counter">69</span> osób dało mi hajs 💰</div>
 
   <script>
     function spawnMoney() {
