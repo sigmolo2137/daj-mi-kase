@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>daj mi swoje pieniądze</title>
 
   <!-- Google Analytics -->
@@ -128,14 +128,27 @@
   <div class="counter">Już <span id="counter">69</span> osób dało mi hajs 💰</div>
 
   <script>
-    // Tryb nocny
+    // Tryb nocny i easteregg Rickroll
     const prefersDark = localStorage.getItem('theme') === 'dark';
     if (prefersDark) document.body.classList.add('dark');
+
+    let toggleClicks = 0;
+    let clickTimeout;
 
     function toggleTheme() {
       document.body.classList.toggle('dark');
       const isDark = document.body.classList.contains('dark');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+      toggleClicks++;
+      clearTimeout(clickTimeout);
+      clickTimeout = setTimeout(() => {
+        toggleClicks = 0;
+      }, 2000); // resetuje licznik po 2 sekundach bez klikania
+
+      if (toggleClicks >= 5) {
+        window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+      }
     }
 
     // Licznik
