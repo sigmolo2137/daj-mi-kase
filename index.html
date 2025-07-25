@@ -52,6 +52,8 @@
       overflow: hidden;
       padding: 2rem 1rem;
       transition: background 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      position: relative;
     }
 
     h1 {
@@ -109,6 +111,17 @@
     .theme-toggle:hover {
       background: var(--button-hover);
     }
+
+    footer {
+      position: absolute;
+      bottom: 1rem;
+      width: 100%;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-color);
+      opacity: 0.6;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -126,6 +139,10 @@
   </a>
 
   <div class="counter">Już <span id="counter">69</span> osób dało mi hajs 💰</div>
+
+  <footer>
+    &copy; 2025 Olek Kościuczyk. Wszelkie prawa zastrzeżone.
+  </footer>
 
   <script>
     // Tryb nocny i easteregg Rickroll
