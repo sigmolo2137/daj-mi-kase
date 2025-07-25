@@ -21,9 +21,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      min-height: 100vh;
       padding: 2rem;
       margin: 0;
       text-align: center;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     h1 {
@@ -47,11 +49,23 @@
       cursor: pointer;
       transition: transform 0.3s ease, background-color 0.3s;
       font-weight: bold;
+      font-family: 'Arial Black', sans-serif;
     }
 
     .money-button:hover {
       background-color: var(--button-hover);
       transform: scale(1.05);
+    }
+
+    .toggle-theme {
+      margin-top: 2rem;
+      background: none;
+      border: 2px solid var(--text-color);
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 8px;
+      color: var(--text-color);
     }
 
     .footer {
@@ -94,12 +108,14 @@
     <span onclick="react('🤑')">🤑</span>
   </div>
 
+  <button class="toggle-theme" onclick="toggleTheme()">Zmień tryb</button>
+
   <img src="https://media.giphy.com/media/3o7qE1YN7aBOFPRw8E/giphy.gif" class="thankyou-gif" id="thankyouGif" alt="Thanks!">
 
   <div class="vip" id="vipBanner"></div>
 
   <div class="footer">
-    &copy; 2025 Olek Kościuczyk. Strona zrobiona z potrzeby hajsu. <br>
+    &copy; 2025 Olek Kościuczyk. Hajs, vibe i wdzięczność. <br>
     <a href="https://www.instagram.com/_sigmolocix_/" target="_blank">Instagram</a>
   </div>
 
@@ -121,20 +137,55 @@
 
     // Gif po kliknięciu
     function handleDonateClick() {
+      clickCount++;
+      if (clickCount === 5) {
+        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        return;
+      }
       window.open("https://buycoffee.to/olekkosciuczyk", "_blank");
       const gif = document.getElementById("thankyouGif");
       gif.style.display = 'block';
     }
 
-    // VIP powrót usera
-    if (localStorage.getItem('visits')) {
-      const visits = parseInt(localStorage.getItem('visits')) + 1;
-      localStorage.setItem('visits', visits);
-      if (visits >= 3) {
-        document.getElementById("vipBanner").innerText = "🔥 Widzę Cię tu znowu, legendarny darczyńco. 💎";
+    // Easter Egg counter
+    let clickCount = 0;
+
+    // Tryb jasny / ciemny
+    function toggleTheme() {
+      const root = document.documentElement;
+      const currentBg = getComputedStyle(root).getPropertyValue('--bg-color').trim();
+      if (currentBg === '#0f3') {
+        root.style.setProperty('--bg-color', '#111');
+        root.style.setProperty('--text-color', '#fff');
+        root.style.setProperty('--button-bg', '#fff');
+        root.style.setProperty('--button-color', '#000');
+        root.style.setProperty('--button-hover', '#ccc');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        root.style.setProperty('--bg-color', '#0f3');
+        root.style.setProperty('--text-color', '#000');
+        root.style.setProperty('--button-bg', '#111');
+        root.style.setProperty('--button-color', '#fff');
+        root.style.setProperty('--button-hover', '#444');
+        localStorage.setItem('theme', 'light');
       }
-    } else {
-      localStorage.setItem('visits', 1);
+    }
+
+    // Ładowanie zapisanej wersji motywu i VIP statusu
+    window.onload = () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') toggleTheme();
+
+      // VIP check
+      if (localStorage.getItem('visits')) {
+        const visits = parseInt(localStorage.getItem('visits')) + 1;
+        localStorage.setItem('visits', visits);
+        if (visits >= 3) {
+          document.getElementById("vipBanner").innerText = "🔥 Widzę Cię tu znowu, legendarny darczyńco. 💎";
+        }
+      } else {
+        localStorage.setItem('visits', 1);
+      }
     }
   </script>
 </body>
