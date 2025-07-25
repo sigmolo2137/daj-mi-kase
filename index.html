@@ -1,44 +1,16 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>daj mi swoje pieniądze</title>
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9LYMDE6XQL"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-9LYMDE6XQL');
-  </script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daj mi pieniądze</title>
   <style>
     :root {
       --bg-color: #0f3;
       --text-color: #000;
-      --button-bg: #FF813F;
-      --button-hover: #e67300;
-      --emoji-size: 2rem;
-    }
-
-    .dark {
-      --bg-color: #121212;
-      --text-color: #eee;
-      --button-bg: #444;
-      --button-hover: #222;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
+      --button-color: #fff;
+      --button-bg: #111;
+      --button-hover: #444;
     }
 
     body {
@@ -49,237 +21,121 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 2rem;
+      margin: 0;
       text-align: center;
-      overflow: hidden;
-      padding: 2rem 1rem 4rem;
-      transition: background 0.3s ease, color 0.3s ease;
-      min-height: 100vh;
-      position: relative;
     }
 
     h1 {
-      font-size: clamp(2rem, 6vw, 3rem);
+      font-size: 3rem;
       margin-bottom: 1rem;
-      text-shadow: 2px 2px #fff;
     }
 
-    p {
-      font-size: clamp(1rem, 4vw, 1.4rem);
-      margin-bottom: 1.5rem;
-      max-width: 600px;
+    p.quote {
+      font-size: 1.2rem;
+      font-style: italic;
+      margin-bottom: 2rem;
     }
 
     .money-button {
-      display: inline-block;
-      background: var(--button-bg);
-      color: white;
+      background-color: var(--button-bg);
+      color: var(--button-color);
+      border: none;
       padding: 1rem 2rem;
-      border-radius: 50px;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: clamp(1rem, 4vw, 1.3rem);
-      font-family: 'Segoe UI', sans-serif;
+      font-size: 1.5rem;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background 0.3s ease;
-      z-index: 2;
-      margin-bottom: 1rem;
-      animation: pulse 2.5s infinite;
-      user-select: none;
+      transition: transform 0.3s ease, background-color 0.3s;
+      font-weight: bold;
     }
 
     .money-button:hover {
-      background: var(--button-hover);
-      animation-play-state: paused;
+      background-color: var(--button-hover);
+      transform: scale(1.05);
     }
 
-    @keyframes pulse {
-      0%, 100% {
-        box-shadow: 0 0 0 0 rgba(255, 129, 63, 0.7);
-      }
-      50% {
-        box-shadow: 0 0 15px 5px rgba(255, 129, 63, 0.4);
-      }
-    }
-
-    .quote {
-      font-style: italic;
-      margin-bottom: 1.5rem;
-      max-width: 600px;
-      font-size: 1.1rem;
-      color: #333;
-    }
-
-    .dark .quote {
-      color: #ccc;
-    }
-
-    .emoji-reacts {
-      margin-bottom: 2rem;
-      user-select: none;
-    }
-
-    .emoji {
-      font-size: var(--emoji-size);
-      cursor: pointer;
-      margin: 0 0.5rem;
-      transition: transform 0.2s ease;
-      display: inline-block;
-    }
-
-    .emoji:hover {
-      transform: scale(1.3);
-    }
-
-    .emoji-count {
-      font-weight: bold;
-      margin-left: 0.4rem;
-      font-size: 1rem;
-      vertical-align: middle;
-    }
-
-    .socials {
-      position: absolute;
-      bottom: 2.5rem;
-      display: flex;
-      gap: 1.5rem;
-      font-size: 1.5rem;
-      user-select: none;
-    }
-
-    .socials a {
-      color: var(--text-color);
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .socials a:hover {
-      color: var(--button-hover);
-    }
-
-    .theme-toggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: var(--button-bg);
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      z-index: 5;
-      user-select: none;
-    }
-
-    .theme-toggle:hover {
-      background: var(--button-hover);
-    }
-
-    footer {
-      position: absolute;
-      bottom: 1rem;
-      width: 100%;
-      text-align: center;
+    .footer {
+      margin-top: 4rem;
       font-size: 0.8rem;
-      color: var(--text-color);
       opacity: 0.6;
-      user-select: none;
+    }
+
+    .emoji-reactions span {
+      font-size: 1.5rem;
+      margin: 0 0.3rem;
+      cursor: pointer;
+    }
+
+    .vip {
+      margin-top: 2rem;
+      font-weight: bold;
+      color: darkred;
+    }
+
+    img.thankyou-gif {
+      width: 200px;
+      margin-top: 2rem;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()">🌗 Zmień tryb</button>
+  <h1>💸 Daj mi pieniądze 💸</h1>
 
-  <h1>💸 Daj mi swoje pieniądze 💸</h1>
-  <p>
-    Twój portfel płacze z przepełnienia? <br />
-    Ulżyj mu, wpłać trochę hajsu, zrób dobry uczynek. <br />
-    Bo każda złotówka wysłana to +1 do karmicznego EQ.
-  </p>
+  <p class="quote" id="quote"></p>
 
-  <div class="quote" id="quote">Loading...</div>
+  <button class="money-button" onclick="handleDonateClick()">wpłać mi 5 złoty</button>
 
-  <a href="https://buycoffee.to/olekkosciuczyk" class="money-button" target="_blank" rel="noopener noreferrer" id="donate-btn">
-    💰 WPŁAĆ MI 5 ZŁOTYCH
-  </a>
-
-  <div class="emoji-reacts">
-    <span class="emoji" data-emoji="🔥" title="Ogień!">🔥<span class="emoji-count" id="count-fire">0</span></span>
-    <span class="emoji" data-emoji="💎" title="Diament!">💎<span class="emoji-count" id="count-diamond">0</span></span>
-    <span class="emoji" data-emoji="🚀" title="Rakieta!">🚀<span class="emoji-count" id="count-rocket">0</span></span>
+  <div class="emoji-reactions">
+    <p>Jak bardzo chcesz dać hajs?</p>
+    <span onclick="react('🔥')">🔥</span>
+    <span onclick="react('💯')">💯</span>
+    <span onclick="react('😭')">😭</span>
+    <span onclick="react('🤑')">🤑</span>
   </div>
 
-  <div class="counter">Już <span id="counter">69</span> osób dało mi hajs 💰</div>
+  <img src="https://media.giphy.com/media/3o7qE1YN7aBOFPRw8E/giphy.gif" class="thankyou-gif" id="thankyouGif" alt="Thanks!">
 
-  <div class="socials" aria-label="Social media">
-    <a href="https://instagram.com/_sigmolocix_" target="_blank" rel="noopener noreferrer" title="Instagram _sigmolocix_">
-      📸
-    </a>
+  <div class="vip" id="vipBanner"></div>
+
+  <div class="footer">
+    &copy; 2025 Olek Kościuczyk. Strona zrobiona z potrzeby hajsu. <br>
+    <a href="https://www.instagram.com/_sigmolocix_/" target="_blank">Instagram</a>
   </div>
-
-  <footer>
-    &copy; 2025 Olek Kościuczyk. Wszelkie prawa zastrzeżone.
-  </footer>
 
   <script>
-    // Tryb nocny i easteregg Rickroll
-    const prefersDark = localStorage.getItem('theme') === 'dark';
-    if (prefersDark) document.body.classList.add('dark');
-
-    let toggleClicks = 0;
-    let clickTimeout;
-
-    function toggleTheme() {
-      document.body.classList.toggle('dark');
-      const isDark = document.body.classList.contains('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-
-      toggleClicks++;
-      clearTimeout(clickTimeout);
-      clickTimeout = setTimeout(() => {
-        toggleClicks = 0;
-      }, 2000); // resetuje licznik po 2 sekundach bez klikania
-
-      if (toggleClicks >= 5) {
-        window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-      }
-    }
-
-    // Cytaty o hojności
+    // Cytaty losowe
     const quotes = [
-      "Szczodrość to język, który głusi mogą słyszeć, a niewidomi widzieć. — Mark Twain",
-      "Nie bogactwo, ale szczodrość czyni człowieka wielkim. — Seneka",
-      "Dając, otrzymujemy podwójnie. — Antoni Czechow",
-      "Karma wraca, więc wpłać i zarób plusa! 😉",
-      "Najlepsza inwestycja? Dobra energia i trochę hajsu dla mnie.",
-      "Dziel się bogactwem, a świat stanie się jaśniejszy."
+      "Pieniądze szczęścia nie dają... ale wpłata tu może.",
+      "Twój portfel nie schudnie, ale karma urośnie.",
+      "Każda złotówka to +1 do stylu życia!",
+      "Dając – otrzymujesz (niekoniecznie zwrot).",
+      "Nie pytaj, co możesz dostać – zapytaj, ile możesz dać."
     ];
+    document.getElementById("quote").innerText = quotes[Math.floor(Math.random() * quotes.length)];
 
-    const quoteEl = document.getElementById('quote');
-    function randomQuote() {
-      const q = quotes[Math.floor(Math.random() * quotes.length)];
-      quoteEl.textContent = q;
+    // Reakcje emoji
+    function react(emoji) {
+      alert(`Reakcja: ${emoji} ❤️ dzięki!`);
     }
-    randomQuote();
 
-    // Emoji react
-    const emojis = document.querySelectorAll('.emoji');
-    emojis.forEach(emoji => {
-      emoji.addEventListener('click', () => {
-        const countSpan = emoji.querySelector('.emoji-count');
-        let count = parseInt(countSpan.textContent);
-        count++;
-        countSpan.textContent = count;
-      });
-    });
+    // Gif po kliknięciu
+    function handleDonateClick() {
+      window.open("https://buycoffee.to/olekkosciuczyk", "_blank");
+      const gif = document.getElementById("thankyouGif");
+      gif.style.display = 'block';
+    }
 
-    // Licznik wpłat
-    const count = document.getElementById('counter');
-    let value = parseInt(localStorage.getItem('donationCount') || 69);
-    value += Math.floor(Math.random() * 3);
-    count.textContent = value;
-    localStorage.setItem('donationCount', value);
-
+    // VIP powrót usera
+    if (localStorage.getItem('visits')) {
+      const visits = parseInt(localStorage.getItem('visits')) + 1;
+      localStorage.setItem('visits', visits);
+      if (visits >= 3) {
+        document.getElementById("vipBanner").innerText = "🔥 Widzę Cię tu znowu, legendarny darczyńco. 💎";
+      }
+    } else {
+      localStorage.setItem('visits', 1);
+    }
   </script>
 </body>
 </html>
