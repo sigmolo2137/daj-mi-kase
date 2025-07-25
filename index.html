@@ -91,10 +91,16 @@
       margin-top: 2rem;
       display: none;
     }
+
+    @media screen and (max-width: 500px) {
+  h1 > span {
+    display:block;
+  }
+}
   </style>
 </head>
 <body>
-  <h1>💸 Daj mi pieniądze 💸</h1>
+  <h1>💸 <span>Daj mi pieniądze</span> 💸</h1>
 
   <p class="quote" id="quote"></p>
 
