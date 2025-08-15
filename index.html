@@ -63,7 +63,13 @@
       cursor: pointer;
       margin: 20px;
       display: none;
-      user-select: none; /* NIE zaznacza się przy klikaniu */
+      user-select: none;
+    }
+
+    #gameInfo {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
     }
 
     #result {
@@ -82,7 +88,6 @@
       color: inherit;
     }
 
-    /* Tryb nocny */
     .dark-mode {
       background-color: #111;
       color: #fff;
@@ -112,6 +117,7 @@
   <button class="button" onclick="toggleDarkMode()">🌙 Zmień tryb</button>
 
   <div id="coin" onclick="clickCoin()">🪙</div>
+  <div id="gameInfo"></div>
   <div id="result"></div>
 
   <footer>
@@ -119,7 +125,7 @@
   </footer>
 
   <script>
-    // Licznik czasu
+    // Licznik czasu na stronie
     let seconds = 0;
     setInterval(() => {
       seconds++;
@@ -129,23 +135,44 @@
     // Gra
     let clicks = 0;
     let gameActive = false;
+    let gameTime = 10;
+    let countdown;
 
     function startGame() {
       clicks = 0;
+      gameTime = 10;
       gameActive = true;
       document.getElementById('coin').style.display = 'block';
-      document.getElementById('result').textContent = "Klikaj monetę przez 10 sekund!";
-      setTimeout(endGame, 10000);
+      document.getElementById('result').textContent = "";
+      updateGameInfo();
+      countdown = setInterval(() => {
+        gameTime--;
+        updateGameInfo();
+        if (gameTime <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function updateGameInfo() {
+      document.getElementById('gameInfo').textContent =
+        `Czas gry: ${gameTime}s | Kliknięcia: ${clicks}`;
     }
 
     function clickCoin() {
-      if (gameActive) clicks++;
+      if (gameActive) {
+        clicks++;
+        updateGameInfo();
+      }
     }
 
     function endGame() {
+      clearInterval(countdown);
       gameActive = false;
       document.getElementById('coin').style.display = 'none';
-      document.getElementById('result').innerHTML = `Udało Ci się kliknąć ${clicks} razy!<br>
+      document.getElementById('gameInfo').textContent = "";
+      document.getElementById('result').innerHTML =
+        `Udało Ci się kliknąć ${clicks} razy!<br>
         <a href="https://buycoffee.to/olekkosciuczyk" target="_blank">Wpłać mi ${clicks} zł</a>`;
     }
 
