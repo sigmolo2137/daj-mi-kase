@@ -16,6 +16,7 @@
       margin: 0;
       padding-top: 50px;
       text-align: center;
+      transition: background-color 0.5s, color 0.5s;
     }
 
     h1 {
@@ -62,6 +63,7 @@
       cursor: pointer;
       margin: 20px;
       display: none;
+      user-select: none; /* NIE zaznacza się przy klikaniu */
     }
 
     #result {
@@ -79,6 +81,21 @@
     a {
       color: inherit;
     }
+
+    /* Tryb nocny */
+    .dark-mode {
+      background-color: #111;
+      color: #fff;
+    }
+
+    .dark-mode h1 {
+      text-shadow: 2px 2px #000;
+    }
+
+    .dark-mode #timer {
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -92,6 +109,7 @@
   </a>
 
   <button class="button" onclick="startGame()">Zagraj w grę i zdecyduj ile wpłacić</button>
+  <button class="button" onclick="toggleDarkMode()">🌙 Zmień tryb</button>
 
   <div id="coin" onclick="clickCoin()">🪙</div>
   <div id="result"></div>
@@ -101,7 +119,7 @@
   </footer>
 
   <script>
-    // Licznik czasu na stronie
+    // Licznik czasu
     let seconds = 0;
     setInterval(() => {
       seconds++;
@@ -111,7 +129,6 @@
     // Gra
     let clicks = 0;
     let gameActive = false;
-    let timerId;
 
     function startGame() {
       clicks = 0;
@@ -130,6 +147,11 @@
       document.getElementById('coin').style.display = 'none';
       document.getElementById('result').innerHTML = `Udało Ci się kliknąć ${clicks} razy!<br>
         <a href="https://buycoffee.to/olekkosciuczyk" target="_blank">Wpłać mi ${clicks} zł</a>`;
+    }
+
+    // Tryb nocny
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
     }
   </script>
 </body>
