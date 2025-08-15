@@ -39,7 +39,7 @@
       margin-bottom: 2rem;
     }
 
-    .money-button {
+    .money-button, .random-button {
       background-color: var(--button-bg);
       color: var(--button-color);
       border: none;
@@ -50,9 +50,10 @@
       transition: transform 0.3s ease, background-color 0.3s;
       font-weight: bold;
       font-family: 'Arial Black', sans-serif;
+      margin-top: 1rem;
     }
 
-    .money-button:hover {
+    .money-button:hover, .random-button:hover {
       background-color: var(--button-hover);
       transform: scale(1.05);
     }
@@ -91,20 +92,15 @@
       margin-top: 2rem;
       display: none;
     }
-
-    @media screen and (max-width: 500px) {
-  h1 > span {
-    display:block;
-  }
-}
   </style>
 </head>
 <body>
-  <h1>💸 <span>Daj mi pieniądze</span> 💸</h1>
+  <h1>💸 Daj mi pieniądze 💸</h1>
 
   <p class="quote" id="quote"></p>
 
   <button class="money-button" onclick="handleDonateClick()">wpłać mi 5 złoty</button>
+  <button class="random-button" onclick="handleRandomAmount()">Losuj kwotę</button>
 
   <div class="emoji-reactions">
     <p>Jak bardzo chcesz dać hajs?</p>
@@ -121,7 +117,7 @@
   <div class="vip" id="vipBanner"></div>
 
   <div class="footer">
-    &copy; 2025 Olek Kościuczyk. Hajs, vibe i wdzięczność. <br>
+    &copy; 2025 Aleksander Kościuczyk. Wszelkie prawa zastrzeżone. <br>
     <a href="https://www.instagram.com/_sigmolocix_/" target="_blank">Instagram</a>
   </div>
 
@@ -151,6 +147,14 @@
       window.open("https://buycoffee.to/olekkosciuczyk", "_blank");
       const gif = document.getElementById("thankyouGif");
       gif.style.display = 'block';
+    }
+
+    // Losowanie kwoty
+    function handleRandomAmount() {
+      const amount = Math.floor(Math.random() * 20 + 1) * 5; // 5,10,...100
+      alert(`Dawaj ${amount} zł, nie bądź cebula!`);
+      const coffees = Math.ceil(amount / 5); // zakładamy 5 zł = 1 kawa
+      window.open(`https://buycoffee.to/olekkosciuczyk?c=${coffees}`, "_blank");
     }
 
     // Easter Egg counter
