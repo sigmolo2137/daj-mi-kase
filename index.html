@@ -74,7 +74,6 @@
 
     .vip { color:gold; text-shadow: 0 2px 8px rgba(0,0,0,0.25); }
 
-    /* small form */
     .guess-row { display:flex; gap:8px; align-items:center; margin-top:8px; flex-wrap:wrap; justify-content:center; }
     input[type=number] { padding:8px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.12); width:120px; }
     .hint { font-weight:700; margin-top:8px; opacity:0.95; }
@@ -106,7 +105,7 @@
       <div class="controls" style="justify-content:flex-start;">
         <button class="btn" id="btn-random">Losuj kwotę</button>
         <button class="btn" id="btn-start-g1">Start — gra 1 (1 moneta, 10s)</button>
-        <button class="btn" id="btn-start-g2">Start — gra 2 (zgaduj, 1–100)</button>
+        <button class="btn" id="btn-start-g2">Start — gra 2 (zgadywanka)</button>
         <button class="btn secondary" id="btn-reset-stats" title="Resetuje lokalne statsy">Reset statów</button>
       </div>
 
@@ -129,7 +128,7 @@
       <section>
         <div style="font-weight:800; margin-bottom:6px;">🎮 Gra 2 — Zgadnij liczbę 1–100</div>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-          <div id="g2-timer" style="font-weight:800">Czas: 0s</div>
+          <div id="g2-status" style="font-weight:800">Status: gotowy</div>
           <div id="g2-attempts" style="font-weight:800">Próby: 0</div>
           <div id="g2-best" style="font-weight:800">Rekord (mniej lepsze): —</div>
         </div>
@@ -300,12 +299,11 @@ coinBtn.addEventListener('click', ()=>{
   }
 });
 
-/* ========== Game 2 (ZGADYWANKA 1-100) ========== */
+/* ========== Game 2 (ZGADYWANKA 1-100) - NOWA WERSJA (bez licznika czasu) ========== */
 let g2Target = null;
 let g2Attempts = 0;
 let g2Active = false;
-let g2StartTime = 0;
-const g2TimerEl = document.getElementById('g2-timer');
+const g2StatusEl = document.getElementById('g2-status');
 const g2AttemptsEl = document.getElementById('g2-attempts');
 const g2BestEl = document.getElementById('g2-best');
 const g2HintEl = document.getElementById('g2-hint');
@@ -316,36 +314,43 @@ const g2RestartBtn = document.getElementById('g2-restart');
 g2BestEl.textContent = stats.g2best > 0 ? `Rekord: ${stats.g2best} prób` : 'Rekord: —';
 
 function startG2(){
-  if(g2Active) return;
+  if(g2Active){
+    // already active — ignore or inform
+    g2HintEl.textContent = 'Gra 2 już aktywna — zgaduj!';
+    return;
+  }
   g2Active = true;
   g2Target = Math.floor(Math.random()*100)+1;
   g2Attempts = 0;
-  g2StartTime = Date.now();
-  g2TimerEl.textContent = `Czas: 10s`;
-  g2AttemptsEl.textContent = `Próby: 0`;
-  g2HintEl.textContent = 'Zgadnij liczbę 1–100.';
-  // start 10s countdown UI only (optionally could enforce time)
-  let t = 10;
-  const timer = setInterval(()=>{
-    t--;
-    g2TimerEl.textContent = `Czas: ${t}s`;
-    if(t<=0){
-      clearInterval(timer);
-      if(g2Active){
-        endG2(false);
-      }
-    }
-  },1000);
+  g2StatusEl.textContent = 'Status: aktywna';
+  g2AttemptsEl.textContent = `Próby: ${g2Attempts}`;
+  g2HintEl.textContent = 'Zgadnij liczbę 1–100. Program odpowie „więcej” lub „mniej”.';
+  g2GuessInput.focus();
 }
+
 function submitGuess(){
-  if(!g2Active){ alert('Uruchom najpierw grę 2 — kliknij "Start — gra 2"'); return; }
+  if(!g2Active){ alert('Uruchom najpierw grę 2 — kliknij "Start — gra 2 (zgadywanka)"'); return; }
   const v = Number(g2GuessInput.value);
   if(!v || v <1 || v>100) { g2HintEl.textContent = 'Wpisz liczbę 1–100!'; return; }
   g2Attempts++;
+  // count this as a click toward total clicks
   stats.clicks++; localStorage.setItem(LS.clicks, stats.clicks); elClicks.textContent = stats.clicks;
   g2AttemptsEl.textContent = `Próby: ${g2Attempts}`;
   if(v === g2Target){
-    endG2(true);
+    // success
+    g2Active = false;
+    g2StatusEl.textContent = 'Status: ukończona';
+    g2HintEl.textContent = `Trafione! Liczba: ${g2Target}`;
+    // update best (fewer attempts is better)
+    if(stats.g2best === 0 || g2Attempts < stats.g2best){
+      stats.g2best = g2Attempts;
+      localStorage.setItem(LS.g2best, stats.g2best);
+      elG2best.textContent = `Rekord: ${stats.g2best} prób`;
+      document.getElementById('title').classList.add('vip');
+      document.getElementById('title').textContent = '👑 Król monet — pobiłeś rekord! 👑';
+    }
+    alert(`Brawo! Zgadłeś w ${g2Attempts} próbach.`);
+    renderStatsUI();
   } else if(v < g2Target){
     g2HintEl.textContent = 'Więcej ➚';
   } else {
@@ -353,26 +358,13 @@ function submitGuess(){
   }
   g2GuessInput.value = '';
 }
-function endG2(won){
+
+function restartG2(){
   g2Active = false;
-  if(!won){
-    alert(`Nie zdążyłeś zgadnąć. Szczęśliwa liczba to ${g2Target}.`);
-    g2HintEl.textContent = `Liczba: ${g2Target}`;
-    return;
-  }
-  // update best (store minimal attempts)
-  if(stats.g2best === 0 || g2Attempts < stats.g2best){
-    stats.g2best = g2Attempts;
-    localStorage.setItem(LS.g2best, stats.g2best);
-    elG2best.textContent = `Rekord: ${stats.g2best} prób`;
-    document.getElementById('title').classList.add('vip');
-    document.getElementById('title').textContent = '👑 Król monet — pobiłeś rekord! 👑';
-  }
-  alert(`Brawo! Zgadłeś w ${g2Attempts} próbach.`);
-  renderStatsUI();
+  startG2();
 }
 g2SubmitBtn.addEventListener('click', submitGuess);
-g2RestartBtn.addEventListener('click', ()=>{ g2Active=false; startG2(); });
+g2RestartBtn.addEventListener('click', restartG2);
 
 /* ========== Reset stats ========== */
 document.getElementById('btn-reset-stats').addEventListener('click', ()=>{
@@ -414,7 +406,7 @@ function applyTheme(index){
 const savedTheme = localStorage.getItem(LS.theme);
 if(savedTheme !== null) applyTheme(Number(savedTheme));
 
-/* title rapid 3-click cycles theme (easter egg) */
+/* title click easter egg: 3 rapid clicks cycles theme */
 let tClicks = 0, tLast = 0;
 document.getElementById('title').addEventListener('click', ()=>{
   const now = Date.now();
@@ -481,19 +473,15 @@ function renderStatsUI(){
 }
 renderStatsUI();
 
-/* ========== Buttons wiring ========== */
+/* ========== Wiring ========== */
 document.getElementById('btn-start-g1').addEventListener('click', startG1);
-document.getElementById('btn-start-g2').addEventListener('click', ()=>{ startG2(); });
-document.getElementById('btn-random').addEventListener('click', ()=>{ /* handled above */ });
-document.getElementById('btn-reset-stats').addEventListener('click', ()=>{ /* handled above */ });
-
-/* helper to update clicks UI */
-function updateClicksUI(){ elClicks.textContent = stats.clicks; }
-
-/* ========== g2 submit via Enter key ========== */
+document.getElementById('btn-start-g2').addEventListener('click', startG2);
+document.getElementById('btn-random').addEventListener('click', ()=>{ /* handled earlier */ });
+document.getElementById('btn-reset-stats').addEventListener('click', ()=>{ /* handled earlier */ });
 document.getElementById('g2-guess').addEventListener('keypress', (e)=> { if(e.key === 'Enter') submitGuess(); });
 
-/* ========== utility expose for console debugging (optional) ========== */
+/* helper */
+function submitGuessKey(){ submitGuess(); }
 window._dmk = { stats, startG1, startG2 };
 
 </script>
