@@ -22,6 +22,8 @@
     h1 {
       font-size: 3rem;
       margin: 1rem 0;
+      cursor: pointer;
+      user-select: none;
     }
     .button {
       background-color: #0070ba;
@@ -44,8 +46,8 @@
       cursor: pointer;
       user-select: none;
     }
-    #timer, #score, #best {
-      margin: 0.5rem;
+    #stats {
+      margin: 1rem 0;
     }
     #music {
       position: fixed;
@@ -53,9 +55,6 @@
       right: 10px;
       font-size: 2rem;
       cursor: pointer;
-    }
-    .hidden {
-      display: none;
     }
     .coin {
       position: absolute;
@@ -78,10 +77,27 @@
     Wpłać mi 5 złoty
   </a>
 
-  <p id="timer">Czas: 0s</p>
-  <p id="score">Kliknięcia w grze: 0</p>
-  <p id="best">Twój rekord: 0</p>
-  <button class="button" onclick="startGame()">🎮 Zagraj w grę</button>
+  <button class="button" onclick="toggleTheme()">🌗 Zmień motyw</button>
+
+  <div id="stats">
+    <p id="visits"></p>
+    <p id="timeSpent"></p>
+    <p id="clicks"></p>
+  </div>
+
+  <div id="game1">
+    <p id="g1timer">Czas gry: 10s</p>
+    <p id="g1score">Kliknięcia: 0</p>
+    <p id="g1best">Twój rekord: 0</p>
+    <div id="coin">🪙</div>
+    <button class="button" onclick="startGame1()">🎮 Gra 1: Klikaj monetę</button>
+  </div>
+
+  <div id="game2">
+    <p id="g2score">Kliknięcia w grze: 0</p>
+    <p id="g2best">Rekord gry 2: 0</p>
+    <button class="button" onclick="startGame2()">🎮 Gra 2: Losowe monety</button>
+  </div>
 
   <div id="music">🎧</div>
 
@@ -90,46 +106,117 @@
   <audio id="rickroll" src="https://www.myinstants.com/media/sounds/rickroll.mp3"></audio>
 
   <script>
-    let sessionTime = 0;
-    let timerInterval = setInterval(() => {
-      sessionTime++;
-      document.getElementById("timer").innerText = "Czas: " + sessionTime + "s";
+    // === STATY LOKALNE ===
+    let visits = localStorage.getItem("visits") || 0;
+    visits++;
+    localStorage.setItem("visits", visits);
 
-      if (sessionTime === 300) { // 5 minut
+    let clicks = localStorage.getItem("clicks") || 0;
+    let timeSpent = localStorage.getItem("timeSpent") || 0;
+
+    document.getElementById("visits").innerText = "Odwiedziłeś stronę: " + visits + " razy";
+    document.getElementById("clicks").innerText = "Łączne kliknięcia: " + clicks;
+    document.getElementById("timeSpent").innerText = "Spędzony czas: " + timeSpent + "s";
+
+    setInterval(() => {
+      timeSpent++;
+      localStorage.setItem("timeSpent", timeSpent);
+      document.getElementById("timeSpent").innerText = "Spędzony czas: " + timeSpent + "s";
+      if (timeSpent == 300) {
         document.body.style.filter = "grayscale(100%)";
-        alert("💀 Widać, że nie masz życia, tylko hajsuj 💀");
+        alert("💀 Bieda mode aktywowany 💀");
       }
     }, 1000);
 
-    // MUZYKA
+    // === MUZYKA ===
     document.getElementById("music").addEventListener("click", () => {
       let audio = document.getElementById("rickroll");
-      if (audio.paused) {
-        audio.play();
+      if (audio.paused) audio.play(); else audio.pause();
+    });
+
+    // === ZMIANA MOTYWU ===
+    let dark = false;
+    function toggleTheme() {
+      dark = !dark;
+      if (dark) {
+        document.body.style.background = "#111";
+        document.body.style.color = "#eee";
       } else {
-        audio.pause();
+        document.body.style.background = "linear-gradient(135deg, #0f3, #00ff99)";
+        document.body.style.color = "#000";
+      }
+    }
+
+    // Easter egg: 3 kliki w tytuł
+    let titleClicks = 0;
+    document.getElementById("title").addEventListener("click", () => {
+      titleClicks++;
+      if (titleClicks == 3) {
+        toggleTheme();
+        titleClicks = 0;
       }
     });
 
-    // GRA Z LOSOWYMI MONETAMI
-    let gameActive = false;
-    let score = 0;
-    let bestScore = localStorage.getItem("bestScore") || 0;
-    document.getElementById("best").innerText = "Twój rekord: " + bestScore;
+    // === GRA 1: Klikaj monetę ===
+    let g1best = localStorage.getItem("g1best") || 0;
+    let g1score = 0, g1time = 10, g1interval;
+    document.getElementById("g1best").innerText = "Twój rekord: " + g1best;
 
-    function startGame() {
-      if (gameActive) return;
-      gameActive = true;
-      score = 0;
-      document.getElementById("score").innerText = "Kliknięcia w grze: " + score;
+    document.getElementById("coin").addEventListener("click", () => {
+      if (g1time > 0) {
+        g1score++;
+        clicks++;
+        localStorage.setItem("clicks", clicks);
+        document.getElementById("clicks").innerText = "Łączne kliknięcia: " + clicks;
+        document.getElementById("g1score").innerText = "Kliknięcia: " + g1score;
+      }
+    });
 
-      let gameTime = 10;
+    function startGame1() {
+      g1score = 0; g1time = 10;
+      document.getElementById("g1timer").innerText = "Czas gry: " + g1time + "s";
+      g1interval = setInterval(() => {
+        g1time--;
+        document.getElementById("g1timer").innerText = "Czas gry: " + g1time + "s";
+        if (g1time <= 0) {
+          clearInterval(g1interval);
+          if (g1score > g1best) {
+            g1best = g1score;
+            localStorage.setItem("g1best", g1best);
+            document.getElementById("g1best").innerText = "Twój rekord: " + g1best;
+            document.getElementById("title").innerText = "👑 Król monet — pobiłeś rekord! 👑";
+          }
+          alert("Gra skończona! Wynik: " + g1score);
+        }
+      }, 1000);
+    }
+
+    // === GRA 2: Losowe monety ===
+    let g2score = 0;
+    let g2best = localStorage.getItem("g2best") || 0;
+    document.getElementById("g2best").innerText = "Rekord gry 2: " + g2best;
+    let g2active = false;
+
+    function startGame2() {
+      if (g2active) return;
+      g2active = true;
+      g2score = 0;
+      document.getElementById("g2score").innerText = "Kliknięcia w grze: 0";
+
+      let time = 10;
       let gameInterval = setInterval(() => {
         spawnCoin();
-        gameTime--;
-        if (gameTime <= 0) {
+        time--;
+        if (time <= 0) {
           clearInterval(gameInterval);
-          endGame();
+          g2active = false;
+          if (g2score > g2best) {
+            g2best = g2score;
+            localStorage.setItem("g2best", g2best);
+            document.getElementById("g2best").innerText = "Rekord gry 2: " + g2best;
+            document.getElementById("title").innerText = "👑 Król monet — pobiłeś rekord! 👑";
+          }
+          alert("Gra 2 skończona! Wynik: " + g2score);
         }
       }, 1000);
     }
@@ -143,27 +230,17 @@
       document.body.appendChild(coin);
 
       coin.addEventListener("click", () => {
-        score++;
-        document.getElementById("score").innerText = "Kliknięcia w grze: " + score;
+        g2score++;
+        clicks++;
+        localStorage.setItem("clicks", clicks);
+        document.getElementById("clicks").innerText = "Łączne kliknięcia: " + clicks;
+        document.getElementById("g2score").innerText = "Kliknięcia w grze: " + g2score;
         coin.remove();
       });
 
       setTimeout(() => {
         if (document.body.contains(coin)) coin.remove();
       }, 900);
-    }
-
-    function endGame() {
-      gameActive = false;
-      if (score > bestScore) {
-        bestScore = score;
-        localStorage.setItem("bestScore", bestScore);
-        document.getElementById("best").innerText = "Twój rekord: " + bestScore;
-
-        // VIP KORONA 👑
-        document.getElementById("title").innerText = "👑 Król monet — pobiłeś rekord! 👑";
-      }
-      alert("Koniec gry! Twój wynik: " + score);
     }
   </script>
 </body>
