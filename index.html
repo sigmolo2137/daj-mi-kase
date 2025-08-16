@@ -91,7 +91,7 @@
   <header style="width:100%; max-width:980px; display:flex; align-items:center; justify-content:space-between;">
     <h1 id="title">💸 Daj mi swoje pieniądze 💸</h1>
     <div style="display:flex; gap:10px; align-items:center;">
-      <div id="musicToggle" title="Muzyka (kliknij)">🎧</div>
+      <button id="musicToggle" title="Muzyka (kliknij)" aria-label="Odtwarzaj muzykę" style="background:transparent;border:0;font-size:1.4rem;cursor:pointer;">🎧</button>
       <a class="btn" href="https://buycoffee.to/olekkosciuczyk" target="_blank" rel="noopener">Wpłać mi 5 złoty</a>
     </div>
   </header>
@@ -176,8 +176,8 @@
     © 2025 Olek Kościuczyk — <a href="https://www.instagram.com/_sigmolocix_/" target="_blank" rel="noopener">@_sigmolocix_</a> • <a href="https://buycoffee.to/olekkosciuczyk" target="_blank">buycoffee.to</a>
   </footer>
 
-  <!-- audio (rickroll fallback link used on toggle) -->
-  <audio id="rickAudio" preload="none" src="https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4"></audio>
+  <!-- audio element (plays on click, no redirect) -->
+  <audio id="rickAudio" preload="auto" src="https://www.myinstants.com/media/sounds/rickroll.mp3"></audio>
 
 <script>
 /* ========== Local storage keys & init ========== */
@@ -186,7 +186,7 @@ const LS = {
   clicks: 'dmk_clicks',
   time: 'dmk_time',
   g1best: 'dmk_g1best',
-  g2best: 'dmk_g2best', // store minimal attempts (lower better); 0 = none
+  g2best: 'dmk_g2best',
   lastRandom: 'dmk_lastRandom',
   theme: 'dmk_theme'
 };
@@ -196,7 +196,7 @@ let stats = {
   clicks: num(localStorage.getItem(LS.clicks)),
   time: num(localStorage.getItem(LS.time)),
   g1best: num(localStorage.getItem(LS.g1best)),
-  g2best: num(localStorage.getItem(LS.g2best)), // 0 means no record
+  g2best: num(localStorage.getItem(LS.g2best)),
   lastRandom: localStorage.getItem(LS.lastRandom) || '0 zł'
 };
 stats.visits++;
@@ -218,7 +218,6 @@ function renderStatsUI(){
   elG1best.textContent = stats.g1best;
   elG2best.textContent = stats.g2best > 0 ? stats.g2best + ' prób' : '—';
   elLastRandom.textContent = stats.lastRandom;
-  // also update game-2 local record display (keeps both places in sync)
   g2BestEl.textContent = stats.g2best > 0 ? `Rekord: ${stats.g2best} prób` : 'Rekord: —';
 }
 renderStatsUI();
@@ -345,7 +344,6 @@ function submitGuess(){
     if(stats.g2best === 0 || g2Attempts < stats.g2best){
       stats.g2best = g2Attempts;
       localStorage.setItem(LS.g2best, stats.g2best);
-      // update both UI places
       renderStatsUI();
       g2BestEl.textContent = `Rekord: ${stats.g2best} prób`;
       document.getElementById('title').classList.add('vip');
@@ -405,10 +403,8 @@ function applyTheme(index){
   const useDarkCards = (t.fg === '#fff' || t.fg === '#eee');
   cards.forEach(c=>{
     c.style.background = useDarkCards ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.88)';
-    // if dark cards, make borders lighter
     c.style.borderColor = useDarkCards ? 'rgba(255,255,255,0.06)' : '';
   });
-  // adjust accent if needed
   document.documentElement.style.setProperty('--accent', index===5 ? '#444' : '#0070ba');
 }
 const savedTheme = localStorage.getItem(LS.theme);
@@ -428,14 +424,28 @@ document.getElementById('title').addEventListener('click', ()=>{
   }
 });
 
-/* ========== RICKROLL / music toggle ========== */
+/* ========== RICKROLL / music toggle - plays audio on site (no redirect) ========== */
 const rick = document.getElementById('rickAudio');
+rick.loop = false;
+rick.volume = 0.85;
 const musicToggle = document.getElementById('musicToggle');
-musicToggle.addEventListener('click', ()=>{
-  if(rick.paused){
-    rick.play().catch(()=> window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ','_blank'));
-    musicToggle.textContent = '🔊';
-  } else { rick.pause(); musicToggle.textContent = '🎧'; }
+
+musicToggle.addEventListener('click', async () => {
+  // user gesture should allow play
+  if (rick.paused) {
+    rick.currentTime = 0;
+    try {
+      await rick.play();
+      musicToggle.textContent = '🔊';
+    } catch (err) {
+      // fallback to opening YT if browser blocks even on click
+      console.warn('Odtwarzanie zablokowane, fallback do YT', err);
+      window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ','_blank');
+    }
+  } else {
+    rick.pause();
+    musicToggle.textContent = '🎧';
+  }
 });
 
 /* ========== DRAW CANVAS ========== */
@@ -483,11 +493,10 @@ function renderStatsUI(){
 renderStatsUI();
 
 /* ========== Wiring & helpers ========== */
-// start buttons
 document.getElementById('btn-start-g1').addEventListener('click', startG1);
 document.getElementById('btn-start-g2').addEventListener('click', startG2);
-document.getElementById('btn-random').addEventListener('click', ()=>{ /* handled above */ });
-document.getElementById('btn-reset-stats').addEventListener('click', ()=>{ /* handled above */ });
+document.getElementById('btn-random').addEventListener('click', ()=>{ /* handled */ });
+document.getElementById('btn-reset-stats').addEventListener('click', ()=>{ /* handled */ });
 document.getElementById('g2-guess').addEventListener('keypress', (e)=> { if(e.key === 'Enter') submitGuess(); });
 
 // expose for debug
