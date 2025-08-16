@@ -1,270 +1,170 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <title>Daj mi swoje pieniądze</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>daj mi swoje pieniądze</title>
   <style>
-    :root {
-      --bg: #0f3;
-      --fg: #000;
-      --card-bg: rgba(255,255,255,.85);
-    }
     body {
-      background: var(--bg);
-      color: var(--fg);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #0f3, #00ff99);
+      color: #000;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 56px 16px 24px;
-      text-align: center;
-      transition: background .3s, color .3s;
+      justify-content: center;
+      overflow: hidden;
+      transition: all 0.5s ease;
     }
     h1 {
-      font-size: clamp(2rem, 6vw, 3rem);
-      margin: 0 0 .5rem;
-      text-shadow: 2px 2px #fff;
+      font-size: 3rem;
+      margin: 1rem 0;
     }
-    p.lead {
-      margin: 0 0 1.25rem;
-      font-size: 1.1rem;
-      max-width: 640px;
-    }
-    .btn {
-      background: #ffcc00;
-      color: #000;
+    .button {
+      background-color: #0070ba;
+      color: #fff;
+      padding: 1rem 2rem;
       border: none;
-      border-radius: 10px;
-      padding: .9rem 1.4rem;
-      font-weight: 800;
+      border-radius: 8px;
+      font-size: 1.5rem;
+      font-weight: bold;
       cursor: pointer;
-      margin: .4rem;
-      font-size: 1rem;
-      transition: transform .15s ease, filter .2s ease;
+      margin: 1rem;
+      text-decoration: none;
+      display: inline-block;
     }
-    .btn:hover { transform: translateY(-1px) scale(1.03); }
-    .btn:active { transform: scale(.98); }
-
-    #timerTop {
-      position: fixed; top: 8px; right: 8px;
-      background: var(--card-bg);
-      padding: 6px 10px; border-radius: 8px; font-weight: 700;
-      backdrop-filter: blur(6px);
+    .button:hover {
+      background-color: #005c99;
     }
-
     #coin {
       font-size: 4rem;
       cursor: pointer;
-      margin: 18px auto 6px;
+      user-select: none;
+    }
+    #timer, #score, #best {
+      margin: 0.5rem;
+    }
+    #music {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    .hidden {
       display: none;
-      user-select: none;           /* no highlight */
-      -webkit-user-select: none;
-      -ms-user-select: none;
-      line-height: 1;
-      transition: transform .05s ease;
     }
-    #coin:active { transform: scale(1.06) rotate(-6deg); }
-
-    #gameInfo, #result {
-      font-weight: 700;
-      margin-top: 6px;
+    .coin {
+      position: absolute;
+      font-size: 3rem;
+      cursor: pointer;
+      user-select: none;
     }
-    #stats {
-      margin-top: 18px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: var(--card-bg);
-      display: inline-block;
-      text-align: left;
-      line-height: 1.6;
-      backdrop-filter: blur(6px);
-    }
-    #stats b { display: inline-block; min-width: 210px; }
-
     footer {
-      margin-top: auto; opacity: .8; font-size: .95rem;
+      position: fixed;
+      bottom: 5px;
+      font-size: 0.8rem;
+      opacity: 0.7;
     }
-    a { color: inherit; }
-
-    /* dark mode */
-    .dark {
-      --bg:#111; --fg:#fff; --card-bg:rgba(0,0,0,.7);
-    }
-    .dark h1 { text-shadow: 2px 2px #000; }
   </style>
 </head>
 <body>
-  <div id="timerTop">Czas na stronie (sesja): 0s</div>
+  <h1 id="title">💸 Daj mi swoje pieniądze 💸</h1>
 
-  <h1>💸 Daj mi swoje pieniądze 💸</h1>
-  <p class="lead">Jesteś tu już chwilę… los decyduje, ale moneta potwierdza. Klikaj, dawaj, karmę pompuj.</p>
-
-  <a href="https://buycoffee.to/olekkosciuczyk" target="_blank" rel="noopener">
-    <button class="btn">Wpłać mi 5 złoty</button>
+  <a href="https://buycoffee.to/olekkosciuczyk" class="button" target="_blank">
+    Wpłać mi 5 złoty
   </a>
-  <button class="btn" onclick="startGame()">Zagraj: klikaj monetę 10s</button>
-  <button class="btn" onclick="toggleTheme()">🌙 Zmień tryb</button>
 
-  <div id="coin" onclick="clickCoin()" aria-label="Moneta do klikania">🪙</div>
-  <div id="gameInfo"></div>
-  <div id="result"></div>
+  <p id="timer">Czas: 0s</p>
+  <p id="score">Kliknięcia w grze: 0</p>
+  <p id="best">Twój rekord: 0</p>
+  <button class="button" onclick="startGame()">🎮 Zagraj w grę</button>
 
-  <div id="stats">
-    <div><b>Łączne kliknięcia (na tym urządzeniu):</b> <span id="statTotalClicks">0</span></div>
-    <div><b>Najlepszy wynik w 10s:</b> <span id="statBestScore">0</span></div>
-    <div><b>Łączny czas na stronie:</b> <span id="statTotalTime">0s</span></div>
-    <div style="margin-top:6px">
-      <button class="btn" style="background:#ddd" onclick="resetStats()">Wyczyść statsy (lokalne)</button>
-    </div>
-  </div>
+  <div id="music">🎧</div>
 
-  <footer>
-    💚 by <a href="https://instagram.com/_sigmolocix_" target="_blank" rel="noopener">@_sigmolocix_</a>
-  </footer>
+  <footer>© 2025 Sigmo — dawaj hajs 💸</footer>
+
+  <audio id="rickroll" src="https://www.myinstants.com/media/sounds/rickroll.mp3"></audio>
 
   <script>
-    /* ======== THEME ======== */
-    const root = document.documentElement;
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') document.body.classList.add('dark');
-    function toggleTheme(){
-      document.body.classList.toggle('dark');
-      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-    }
+    let sessionTime = 0;
+    let timerInterval = setInterval(() => {
+      sessionTime++;
+      document.getElementById("timer").innerText = "Czas: " + sessionTime + "s";
 
-    /* ======== STATS (localStorage) ======== */
-    const LS_KEYS = {
-      totalClicks: 'dmk_totalClicks',
-      bestScore:  'dmk_bestScore',
-      totalTime:  'dmk_totalTime'
-    };
-    const stats = {
-      totalClicks: parseInt(localStorage.getItem(LS_KEYS.totalClicks) || '0', 10),
-      bestScore:   parseInt(localStorage.getItem(LS_KEYS.bestScore)   || '0', 10),
-      totalTime:   parseInt(localStorage.getItem(LS_KEYS.totalTime)   || '0', 10) // sekundy
-    };
-    const elTotalClicks = document.getElementById('statTotalClicks');
-    const elBestScore   = document.getElementById('statBestScore');
-    const elTotalTime   = document.getElementById('statTotalTime');
-
-    function saveStats(){
-      localStorage.setItem(LS_KEYS.totalClicks, String(stats.totalClicks));
-      localStorage.setItem(LS_KEYS.bestScore,   String(stats.bestScore));
-      localStorage.setItem(LS_KEYS.totalTime,   String(stats.totalTime));
-      renderStats();
-    }
-    function formatTime(seconds){
-      const h = Math.floor(seconds/3600).toString().padStart(2,'0');
-      const m = Math.floor((seconds%3600)/60).toString().padStart(2,'0');
-      const s = Math.floor(seconds%60).toString().padStart(2,'0');
-      return (seconds>=3600) ? `${h}:${m}:${s}` : `${m}:${s}`;
-    }
-    function renderStats(){
-      elTotalClicks.textContent = stats.totalClicks;
-      elBestScore.textContent   = stats.bestScore;
-      elTotalTime.textContent   = formatTime(stats.totalTime);
-    }
-    function resetStats(){
-      if(!confirm('Na bank chcesz skasować lokalne statsy?')) return;
-      stats.totalClicks = 0; stats.bestScore = 0; stats.totalTime = 0;
-      saveStats();
-    }
-    renderStats();
-
-    /* ======== SESSION TIMER (UI top-right) + ACCUMULATOR ======== */
-    const timerTop = document.getElementById('timerTop');
-    let sessionSeconds = 0;
-    setInterval(()=>{
-      sessionSeconds++;
-      timerTop.textContent = `Czas na stronie (sesja): ${sessionSeconds}s`;
-      // zliczaj także do łącznego czasu
-      stats.totalTime++;
-      // zapisz co 5s żeby nie męczyć localStorage
-      if (sessionSeconds % 5 === 0) saveStats();
-      else renderStats();
+      if (sessionTime === 300) { // 5 minut
+        document.body.style.filter = "grayscale(100%)";
+        alert("💀 Widać, że nie masz życia, tylko hajsuj 💀");
+      }
     }, 1000);
 
-    /* ======== GAME: 10s clicker ======== */
-    const coin = document.getElementById('coin');
-    const gameInfo = document.getElementById('gameInfo');
-    const result = document.getElementById('result');
-
-    let gameActive = false;
-    let clicks = 0;
-    let timeLeft = 10;
-    let gameInterval = null;
-
-    function startGame(){
-      if (gameActive) return;
-      clicks = 0;
-      timeLeft = 10;
-      gameActive = true;
-      coin.style.display = 'block';
-      result.textContent = '';
-      updateGameInfo();
-      gameInterval = setInterval(()=>{
-        timeLeft--;
-        updateGameInfo();
-        if (timeLeft <= 0) endGame();
-      }, 1000);
-    }
-    function updateGameInfo(){
-      gameInfo.textContent = `Czas gry: ${timeLeft}s | Kliknięcia: ${clicks}`;
-    }
-    function clickCoin(){
-      if (!gameActive) return;
-      clicks++;
-      stats.totalClicks++;         // łączne kliknięcia (lokalnie)
-      updateGameInfo();
-      renderStats();               // szybka aktualizacja liczb
-    }
-    function endGame(){
-      clearInterval(gameInterval);
-      gameActive = false;
-      coin.style.display = 'none';
-      gameInfo.textContent = '';
-      if (clicks > stats.bestScore){
-        stats.bestScore = clicks;
-      }
-      saveStats();
-      result.innerHTML = `Udało Ci się kliknąć <b>${clicks}</b> razy!<br>
-        <a href="https://buycoffee.to/olekkosciuczyk" target="_blank" rel="noopener">
-          Wpłać mi ${clicks} zł
-        </a>`;
-    }
-
-    /* ======== EASTER EGGY gotowe pod rozbudowę (pkt 7) ======== */
-    // np. 3x szybko kliknij tytuł -> zmień tło
-    let titleClicks = 0; let lastTitleTap = 0;
-    document.querySelector('h1').addEventListener('click', ()=>{
-      const now = Date.now();
-      if (now - lastTitleTap < 600) titleClicks++; else titleClicks = 1;
-      lastTitleTap = now;
-      if (titleClicks >= 3){
-        // ukryty motyw – dziki gradient
-        document.body.style.background =
-          'linear-gradient(135deg,#00ff88,#00b3ff,#ff00f7)';
-        setTimeout(()=>{ document.body.style.background = ''; renderStats(); }, 4000);
-        titleClicks = 0;
+    // MUZYKA
+    document.getElementById("music").addEventListener("click", () => {
+      let audio = document.getElementById("rickroll");
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
       }
     });
 
-    /* ======== LOSOWA ZMIANA TŁA NA START (pkt 5) ======== */
-    (function randomizeBackground(){
-      const gradients = [
-        'linear-gradient(135deg,#0f3,#baff00)',
-        'linear-gradient(135deg,#0f3,#00ffa8)',
-        'linear-gradient(135deg,#a8ff78,#78ffd6)',
-        'linear-gradient(135deg,#d4fc79,#96e6a1)'
-      ];
-      // 1/2 szansy na gradient zamiast stałej zieleni
-      if (Math.random() < 0.5) document.body.style.background = gradients[Math.floor(Math.random()*gradients.length)];
-      // szanuj tryb nocny
-      if (document.body.classList.contains('dark')) document.body.style.background = '';
-    })();
+    // GRA Z LOSOWYMI MONETAMI
+    let gameActive = false;
+    let score = 0;
+    let bestScore = localStorage.getItem("bestScore") || 0;
+    document.getElementById("best").innerText = "Twój rekord: " + bestScore;
+
+    function startGame() {
+      if (gameActive) return;
+      gameActive = true;
+      score = 0;
+      document.getElementById("score").innerText = "Kliknięcia w grze: " + score;
+
+      let gameTime = 10;
+      let gameInterval = setInterval(() => {
+        spawnCoin();
+        gameTime--;
+        if (gameTime <= 0) {
+          clearInterval(gameInterval);
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function spawnCoin() {
+      let coin = document.createElement("div");
+      coin.innerText = "🪙";
+      coin.classList.add("coin");
+      coin.style.top = Math.random() * (window.innerHeight - 50) + "px";
+      coin.style.left = Math.random() * (window.innerWidth - 50) + "px";
+      document.body.appendChild(coin);
+
+      coin.addEventListener("click", () => {
+        score++;
+        document.getElementById("score").innerText = "Kliknięcia w grze: " + score;
+        coin.remove();
+      });
+
+      setTimeout(() => {
+        if (document.body.contains(coin)) coin.remove();
+      }, 900);
+    }
+
+    function endGame() {
+      gameActive = false;
+      if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem("bestScore", bestScore);
+        document.getElementById("best").innerText = "Twój rekord: " + bestScore;
+
+        // VIP KORONA 👑
+        document.getElementById("title").innerText = "👑 Król monet — pobiłeś rekord! 👑";
+      }
+      alert("Koniec gry! Twój wynik: " + score);
+    }
   </script>
 </body>
 </html>
