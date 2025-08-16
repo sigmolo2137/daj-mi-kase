@@ -1,185 +1,270 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Daj mi swoje pieniądze</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --bg: #0f3;
+      --fg: #000;
+      --card-bg: rgba(255,255,255,.85);
+    }
     body {
-      background-color: #0f3;
-      color: #000;
-      font-family: 'Courier New', monospace;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
-      padding-top: 50px;
+      padding: 56px 16px 24px;
       text-align: center;
-      transition: background-color 0.5s, color 0.5s;
+      transition: background .3s, color .3s;
     }
-
     h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+      font-size: clamp(2rem, 6vw, 3rem);
+      margin: 0 0 .5rem;
       text-shadow: 2px 2px #fff;
     }
-
-    p {
-      font-size: 1.5rem;
-      max-width: 600px;
-      margin-bottom: 2rem;
+    p.lead {
+      margin: 0 0 1.25rem;
+      font-size: 1.1rem;
+      max-width: 640px;
     }
-
-    .button {
-      background-color: #ffcc00;
+    .btn {
+      background: #ffcc00;
       color: #000;
-      padding: 1rem 2rem;
       border: none;
-      border-radius: 8px;
-      font-size: 1.2rem;
-      font-weight: bold;
+      border-radius: 10px;
+      padding: .9rem 1.4rem;
+      font-weight: 800;
       cursor: pointer;
-      margin: 10px;
-      transition: transform 0.2s ease;
+      margin: .4rem;
+      font-size: 1rem;
+      transition: transform .15s ease, filter .2s ease;
     }
+    .btn:hover { transform: translateY(-1px) scale(1.03); }
+    .btn:active { transform: scale(.98); }
 
-    .button:hover {
-      transform: scale(1.1);
-    }
-
-    #timer {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-weight: bold;
+    #timerTop {
+      position: fixed; top: 8px; right: 8px;
+      background: var(--card-bg);
+      padding: 6px 10px; border-radius: 8px; font-weight: 700;
+      backdrop-filter: blur(6px);
     }
 
     #coin {
       font-size: 4rem;
       cursor: pointer;
-      margin: 20px;
+      margin: 18px auto 6px;
       display: none;
-      user-select: none;
+      user-select: none;           /* no highlight */
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      line-height: 1;
+      transition: transform .05s ease;
     }
+    #coin:active { transform: scale(1.06) rotate(-6deg); }
 
-    #gameInfo {
-      margin-top: 10px;
-      font-size: 1.2rem;
-      font-weight: bold;
+    #gameInfo, #result {
+      font-weight: 700;
+      margin-top: 6px;
     }
-
-    #result {
-      margin-top: 20px;
-      font-size: 1.5rem;
-      font-weight: bold;
+    #stats {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      display: inline-block;
+      text-align: left;
+      line-height: 1.6;
+      backdrop-filter: blur(6px);
     }
+    #stats b { display: inline-block; min-width: 210px; }
 
     footer {
-      margin-top: auto;
-      padding: 10px;
-      font-size: 0.9rem;
+      margin-top: auto; opacity: .8; font-size: .95rem;
     }
+    a { color: inherit; }
 
-    a {
-      color: inherit;
+    /* dark mode */
+    .dark {
+      --bg:#111; --fg:#fff; --card-bg:rgba(0,0,0,.7);
     }
-
-    .dark-mode {
-      background-color: #111;
-      color: #fff;
-    }
-
-    .dark-mode h1 {
-      text-shadow: 2px 2px #000;
-    }
-
-    .dark-mode #timer {
-      background: rgba(0, 0, 0, 0.8);
-      color: #fff;
-    }
+    .dark h1 { text-shadow: 2px 2px #000; }
   </style>
 </head>
 <body>
-  <div id="timer">Czas na stronie: 0s</div>
+  <div id="timerTop">Czas na stronie (sesja): 0s</div>
 
   <h1>💸 Daj mi swoje pieniądze 💸</h1>
-  <p>Jesteś tu już chwilę... może czas zrobić dobry uczynek?</p>
+  <p class="lead">Jesteś tu już chwilę… los decyduje, ale moneta potwierdza. Klikaj, dawaj, karmę pompuj.</p>
 
-  <a href="https://buycoffee.to/olekkosciuczyk" target="_blank">
-    <button class="button">Wpłać mi 5 złoty</button>
+  <a href="https://buycoffee.to/olekkosciuczyk" target="_blank" rel="noopener">
+    <button class="btn">Wpłać mi 5 złoty</button>
   </a>
+  <button class="btn" onclick="startGame()">Zagraj: klikaj monetę 10s</button>
+  <button class="btn" onclick="toggleTheme()">🌙 Zmień tryb</button>
 
-  <button class="button" onclick="startGame()">Zagraj w grę i zdecyduj ile wpłacić</button>
-  <button class="button" onclick="toggleDarkMode()">🌙 Zmień tryb</button>
-
-  <div id="coin" onclick="clickCoin()">🪙</div>
+  <div id="coin" onclick="clickCoin()" aria-label="Moneta do klikania">🪙</div>
   <div id="gameInfo"></div>
   <div id="result"></div>
 
+  <div id="stats">
+    <div><b>Łączne kliknięcia (na tym urządzeniu):</b> <span id="statTotalClicks">0</span></div>
+    <div><b>Najlepszy wynik w 10s:</b> <span id="statBestScore">0</span></div>
+    <div><b>Łączny czas na stronie:</b> <span id="statTotalTime">0s</span></div>
+    <div style="margin-top:6px">
+      <button class="btn" style="background:#ddd" onclick="resetStats()">Wyczyść statsy (lokalne)</button>
+    </div>
+  </div>
+
   <footer>
-    <p>💚 by <a href="https://instagram.com/_sigmolocix_" target="_blank">@_sigmolocix_</a></p>
+    💚 by <a href="https://instagram.com/_sigmolocix_" target="_blank" rel="noopener">@_sigmolocix_</a>
   </footer>
 
   <script>
-    // Licznik czasu na stronie
-    let seconds = 0;
-    setInterval(() => {
-      seconds++;
-      document.getElementById('timer').textContent = `Czas na stronie: ${seconds}s`;
+    /* ======== THEME ======== */
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') document.body.classList.add('dark');
+    function toggleTheme(){
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+
+    /* ======== STATS (localStorage) ======== */
+    const LS_KEYS = {
+      totalClicks: 'dmk_totalClicks',
+      bestScore:  'dmk_bestScore',
+      totalTime:  'dmk_totalTime'
+    };
+    const stats = {
+      totalClicks: parseInt(localStorage.getItem(LS_KEYS.totalClicks) || '0', 10),
+      bestScore:   parseInt(localStorage.getItem(LS_KEYS.bestScore)   || '0', 10),
+      totalTime:   parseInt(localStorage.getItem(LS_KEYS.totalTime)   || '0', 10) // sekundy
+    };
+    const elTotalClicks = document.getElementById('statTotalClicks');
+    const elBestScore   = document.getElementById('statBestScore');
+    const elTotalTime   = document.getElementById('statTotalTime');
+
+    function saveStats(){
+      localStorage.setItem(LS_KEYS.totalClicks, String(stats.totalClicks));
+      localStorage.setItem(LS_KEYS.bestScore,   String(stats.bestScore));
+      localStorage.setItem(LS_KEYS.totalTime,   String(stats.totalTime));
+      renderStats();
+    }
+    function formatTime(seconds){
+      const h = Math.floor(seconds/3600).toString().padStart(2,'0');
+      const m = Math.floor((seconds%3600)/60).toString().padStart(2,'0');
+      const s = Math.floor(seconds%60).toString().padStart(2,'0');
+      return (seconds>=3600) ? `${h}:${m}:${s}` : `${m}:${s}`;
+    }
+    function renderStats(){
+      elTotalClicks.textContent = stats.totalClicks;
+      elBestScore.textContent   = stats.bestScore;
+      elTotalTime.textContent   = formatTime(stats.totalTime);
+    }
+    function resetStats(){
+      if(!confirm('Na bank chcesz skasować lokalne statsy?')) return;
+      stats.totalClicks = 0; stats.bestScore = 0; stats.totalTime = 0;
+      saveStats();
+    }
+    renderStats();
+
+    /* ======== SESSION TIMER (UI top-right) + ACCUMULATOR ======== */
+    const timerTop = document.getElementById('timerTop');
+    let sessionSeconds = 0;
+    setInterval(()=>{
+      sessionSeconds++;
+      timerTop.textContent = `Czas na stronie (sesja): ${sessionSeconds}s`;
+      // zliczaj także do łącznego czasu
+      stats.totalTime++;
+      // zapisz co 5s żeby nie męczyć localStorage
+      if (sessionSeconds % 5 === 0) saveStats();
+      else renderStats();
     }, 1000);
 
-    // Gra
-    let clicks = 0;
-    let gameActive = false;
-    let gameTime = 10;
-    let countdown;
+    /* ======== GAME: 10s clicker ======== */
+    const coin = document.getElementById('coin');
+    const gameInfo = document.getElementById('gameInfo');
+    const result = document.getElementById('result');
 
-    function startGame() {
+    let gameActive = false;
+    let clicks = 0;
+    let timeLeft = 10;
+    let gameInterval = null;
+
+    function startGame(){
+      if (gameActive) return;
       clicks = 0;
-      gameTime = 10;
+      timeLeft = 10;
       gameActive = true;
-      document.getElementById('coin').style.display = 'block';
-      document.getElementById('result').textContent = "";
+      coin.style.display = 'block';
+      result.textContent = '';
       updateGameInfo();
-      countdown = setInterval(() => {
-        gameTime--;
+      gameInterval = setInterval(()=>{
+        timeLeft--;
         updateGameInfo();
-        if (gameTime <= 0) {
-          endGame();
-        }
+        if (timeLeft <= 0) endGame();
       }, 1000);
     }
-
-    function updateGameInfo() {
-      document.getElementById('gameInfo').textContent =
-        `Czas gry: ${gameTime}s | Kliknięcia: ${clicks}`;
+    function updateGameInfo(){
+      gameInfo.textContent = `Czas gry: ${timeLeft}s | Kliknięcia: ${clicks}`;
     }
-
-    function clickCoin() {
-      if (gameActive) {
-        clicks++;
-        updateGameInfo();
-      }
+    function clickCoin(){
+      if (!gameActive) return;
+      clicks++;
+      stats.totalClicks++;         // łączne kliknięcia (lokalnie)
+      updateGameInfo();
+      renderStats();               // szybka aktualizacja liczb
     }
-
-    function endGame() {
-      clearInterval(countdown);
+    function endGame(){
+      clearInterval(gameInterval);
       gameActive = false;
-      document.getElementById('coin').style.display = 'none';
-      document.getElementById('gameInfo').textContent = "";
-      document.getElementById('result').innerHTML =
-        `Udało Ci się kliknąć ${clicks} razy!<br>
-        <a href="https://buycoffee.to/olekkosciuczyk" target="_blank">Wpłać mi ${clicks} zł</a>`;
+      coin.style.display = 'none';
+      gameInfo.textContent = '';
+      if (clicks > stats.bestScore){
+        stats.bestScore = clicks;
+      }
+      saveStats();
+      result.innerHTML = `Udało Ci się kliknąć <b>${clicks}</b> razy!<br>
+        <a href="https://buycoffee.to/olekkosciuczyk" target="_blank" rel="noopener">
+          Wpłać mi ${clicks} zł
+        </a>`;
     }
 
-    // Tryb nocny
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-    }
+    /* ======== EASTER EGGY gotowe pod rozbudowę (pkt 7) ======== */
+    // np. 3x szybko kliknij tytuł -> zmień tło
+    let titleClicks = 0; let lastTitleTap = 0;
+    document.querySelector('h1').addEventListener('click', ()=>{
+      const now = Date.now();
+      if (now - lastTitleTap < 600) titleClicks++; else titleClicks = 1;
+      lastTitleTap = now;
+      if (titleClicks >= 3){
+        // ukryty motyw – dziki gradient
+        document.body.style.background =
+          'linear-gradient(135deg,#00ff88,#00b3ff,#ff00f7)';
+        setTimeout(()=>{ document.body.style.background = ''; renderStats(); }, 4000);
+        titleClicks = 0;
+      }
+    });
+
+    /* ======== LOSOWA ZMIANA TŁA NA START (pkt 5) ======== */
+    (function randomizeBackground(){
+      const gradients = [
+        'linear-gradient(135deg,#0f3,#baff00)',
+        'linear-gradient(135deg,#0f3,#00ffa8)',
+        'linear-gradient(135deg,#a8ff78,#78ffd6)',
+        'linear-gradient(135deg,#d4fc79,#96e6a1)'
+      ];
+      // 1/2 szansy na gradient zamiast stałej zieleni
+      if (Math.random() < 0.5) document.body.style.background = gradients[Math.floor(Math.random()*gradients.length)];
+      // szanuj tryb nocny
+      if (document.body.classList.contains('dark')) document.body.style.background = '';
+    })();
   </script>
 </body>
 </html>
