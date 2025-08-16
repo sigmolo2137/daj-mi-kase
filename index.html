@@ -209,6 +209,7 @@ const elTime = document.getElementById('stat-time');
 const elG1best = document.getElementById('stat-g1best');
 const elG2best = document.getElementById('stat-g2best');
 const elLastRandom = document.getElementById('last-random');
+const g2BestEl = document.getElementById('g2-best');
 
 function renderStatsUI(){
   elVisits.textContent = stats.visits;
@@ -217,6 +218,8 @@ function renderStatsUI(){
   elG1best.textContent = stats.g1best;
   elG2best.textContent = stats.g2best > 0 ? stats.g2best + ' prób' : '—';
   elLastRandom.textContent = stats.lastRandom;
+  // also update game-2 local record display (keeps both places in sync)
+  g2BestEl.textContent = stats.g2best > 0 ? `Rekord: ${stats.g2best} prób` : 'Rekord: —';
 }
 renderStatsUI();
 
@@ -299,13 +302,12 @@ coinBtn.addEventListener('click', ()=>{
   }
 });
 
-/* ========== Game 2 (ZGADYWANKA 1-100) - NOWA WERSJA (bez licznika czasu) ========== */
+/* ========== Game 2 (ZGADYWANKA 1-100) - bez licznika czasu ========== */
 let g2Target = null;
 let g2Attempts = 0;
 let g2Active = false;
 const g2StatusEl = document.getElementById('g2-status');
 const g2AttemptsEl = document.getElementById('g2-attempts');
-const g2BestEl = document.getElementById('g2-best');
 const g2HintEl = document.getElementById('g2-hint');
 const g2GuessInput = document.getElementById('g2-guess');
 const g2SubmitBtn = document.getElementById('g2-submit');
@@ -315,7 +317,6 @@ g2BestEl.textContent = stats.g2best > 0 ? `Rekord: ${stats.g2best} prób` : 'Rek
 
 function startG2(){
   if(g2Active){
-    // already active — ignore or inform
     g2HintEl.textContent = 'Gra 2 już aktywna — zgaduj!';
     return;
   }
@@ -333,19 +334,20 @@ function submitGuess(){
   const v = Number(g2GuessInput.value);
   if(!v || v <1 || v>100) { g2HintEl.textContent = 'Wpisz liczbę 1–100!'; return; }
   g2Attempts++;
-  // count this as a click toward total clicks
+  // treat this as a click
   stats.clicks++; localStorage.setItem(LS.clicks, stats.clicks); elClicks.textContent = stats.clicks;
   g2AttemptsEl.textContent = `Próby: ${g2Attempts}`;
   if(v === g2Target){
-    // success
     g2Active = false;
     g2StatusEl.textContent = 'Status: ukończona';
     g2HintEl.textContent = `Trafione! Liczba: ${g2Target}`;
-    // update best (fewer attempts is better)
+    // update best (lower attempts better)
     if(stats.g2best === 0 || g2Attempts < stats.g2best){
       stats.g2best = g2Attempts;
       localStorage.setItem(LS.g2best, stats.g2best);
-      elG2best.textContent = `Rekord: ${stats.g2best} prób`;
+      // update both UI places
+      renderStatsUI();
+      g2BestEl.textContent = `Rekord: ${stats.g2best} prób`;
       document.getElementById('title').classList.add('vip');
       document.getElementById('title').textContent = '👑 Król monet — pobiłeś rekord! 👑';
     }
@@ -373,7 +375,7 @@ document.getElementById('btn-reset-stats').addEventListener('click', ()=>{
   location.reload();
 });
 
-/* ========== THEMES & swatches ========== */
+/* ========== THEMES & swatches (improved contrast behavior) ========== */
 const THEMES = [
   {name:'Zielony banknot', bg: 'linear-gradient(135deg,#0f3,#baff00)', fg:'#000'},
   {name:'Słoneczny', bg: 'linear-gradient(135deg,#ffef6b,#ffb347)', fg:'#000'},
@@ -398,10 +400,16 @@ function applyTheme(index){
   const t = THEMES[index];
   document.body.style.background = t.bg;
   document.body.style.color = t.fg;
+  // set card backgrounds to dark if theme uses light text, else use light cards
   const cards = document.querySelectorAll('.card, .session-timer, footer, .stats, .drawer');
+  const useDarkCards = (t.fg === '#fff' || t.fg === '#eee');
   cards.forEach(c=>{
-    c.style.background = index===5 ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.88)';
+    c.style.background = useDarkCards ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.88)';
+    // if dark cards, make borders lighter
+    c.style.borderColor = useDarkCards ? 'rgba(255,255,255,0.06)' : '';
   });
+  // adjust accent if needed
+  document.documentElement.style.setProperty('--accent', index===5 ? '#444' : '#0070ba');
 }
 const savedTheme = localStorage.getItem(LS.theme);
 if(savedTheme !== null) applyTheme(Number(savedTheme));
@@ -470,18 +478,19 @@ function renderStatsUI(){
   elG1best.textContent = stats.g1best;
   elG2best.textContent = stats.g2best > 0 ? stats.g2best + ' prób' : '—';
   elLastRandom.textContent = stats.lastRandom;
+  g2BestEl.textContent = stats.g2best > 0 ? `Rekord: ${stats.g2best} prób` : 'Rekord: —';
 }
 renderStatsUI();
 
-/* ========== Wiring ========== */
+/* ========== Wiring & helpers ========== */
+// start buttons
 document.getElementById('btn-start-g1').addEventListener('click', startG1);
 document.getElementById('btn-start-g2').addEventListener('click', startG2);
-document.getElementById('btn-random').addEventListener('click', ()=>{ /* handled earlier */ });
-document.getElementById('btn-reset-stats').addEventListener('click', ()=>{ /* handled earlier */ });
+document.getElementById('btn-random').addEventListener('click', ()=>{ /* handled above */ });
+document.getElementById('btn-reset-stats').addEventListener('click', ()=>{ /* handled above */ });
 document.getElementById('g2-guess').addEventListener('keypress', (e)=> { if(e.key === 'Enter') submitGuess(); });
 
-/* helper */
-function submitGuessKey(){ submitGuess(); }
+// expose for debug
 window._dmk = { stats, startG1, startG2 };
 
 </script>
