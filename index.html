@@ -86,7 +86,6 @@
     flex-wrap: wrap;
   }
 
-  /* Mobile responsiveness */
   @media (max-width: 500px) {
     .buttons-row, .theme-row {
       flex-direction: column;
@@ -102,13 +101,14 @@
 <div class="buttons-row">
   <a href="https://buycoffee.to/olekkosciuczyk" class="button" target="_blank">Wpłać mi 5 złoty</a>
   <button class="button" id="random-amount">Losuj kwotę</button>
-  <button class="button" id="change-theme">Zmień motyw</button>
+  <button class="button" id="coin-button">Kliknij monetę</button>
 </div>
 
 <div class="stats" id="stats-panel">
   <h3>Statystyki lokalne:</h3>
   <p>Kliknięcia monet: <span id="click-count">0</span></p>
   <p>Ostatnio wylosowana kwota: <span id="last-amount">0 zł</span></p>
+  <p>Czas spędzony na stronie: <span id="time-spent">0</span> sek</p>
 </div>
 
 <div class="theme-row" id="theme-options">
@@ -123,22 +123,29 @@
 <script>
 let clickCount = 0;
 let titleClick = 0;
+let timeSpent = 0;
 
 const clickCounter = document.getElementById('click-count');
 const lastAmount = document.getElementById('last-amount');
 const randomButton = document.getElementById('random-amount');
 const title = document.getElementById('main-title');
-const changeThemeBtn = document.getElementById('change-theme');
+const coinButton = document.getElementById('coin-button');
 const themeOptions = document.getElementById('theme-options');
+const timeDisplay = document.getElementById('time-spent');
 
-randomButton.addEventListener('click', () => {
-  const amount = Math.floor(Math.random() * 50) + 1;
-  lastAmount.textContent = amount + ' zł';
+// Gra: kliknięcia w monetę
+coinButton.addEventListener('click', () => {
   clickCount++;
   clickCounter.textContent = clickCount;
 });
 
-// Easter egg: tytuł
+// Losowanie kwoty
+randomButton.addEventListener('click', () => {
+  const amount = Math.floor(Math.random() * 50) + 1;
+  lastAmount.textContent = amount + ' zł';
+});
+
+// Easter egg po kliknięciu tytułu 3 razy
 title.addEventListener('click', () => {
   titleClick++;
   if (titleClick === 3) {
@@ -153,6 +160,12 @@ themeOptions.addEventListener('click', (e) => {
     document.body.style.backgroundColor = e.target.dataset.color;
   }
 });
+
+// Licznik czasu spędzonego na stronie
+setInterval(() => {
+  timeSpent++;
+  timeDisplay.textContent = timeSpent;
+}, 1000);
 </script>
 
 </body>
