@@ -1,247 +1,159 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>daj mi swoje pieniądze</title>
-  <style>
-    body {
-      background: linear-gradient(135deg, #0f3, #00ff99);
-      color: #000;
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
+<meta charset="UTF-8">
+<title>Daj mi swoje pieniądze</title>
+<style>
+  body {
+    background-color: #0f3;
+    color: #000;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.5s, color 0.5s;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px #fff;
+  }
+
+  p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    text-align: center;
+  }
+
+  .buttons-row {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .button {
+    background-color: #0070ba;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .button:hover {
+    background-color: #005c99;
+  }
+
+  .stats {
+    border: 2px solid #000;
+    padding: 15px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+    background-color: rgba(255,255,255,0.2);
+  }
+
+  .theme-button {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #000;
+    background-color: #fff;
+    font-weight: bold;
+  }
+
+  .theme-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 500px) {
+    .buttons-row, .theme-row {
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      transition: all 0.5s ease;
     }
-    h1 {
-      font-size: 3rem;
-      margin: 1rem 0;
-      cursor: pointer;
-      user-select: none;
-    }
-    .button {
-      background-color: #0070ba;
-      color: #fff;
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.5rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 1rem;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .button:hover {
-      background-color: #005c99;
-    }
-    #coin {
-      font-size: 4rem;
-      cursor: pointer;
-      user-select: none;
-    }
-    #stats {
-      margin: 1rem 0;
-    }
-    #music {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      font-size: 2rem;
-      cursor: pointer;
-    }
-    .coin {
-      position: absolute;
-      font-size: 3rem;
-      cursor: pointer;
-      user-select: none;
-    }
-    footer {
-      position: fixed;
-      bottom: 5px;
-      font-size: 0.8rem;
-      opacity: 0.7;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <h1 id="title">💸 Daj mi swoje pieniądze 💸</h1>
 
-  <a href="https://buycoffee.to/olekkosciuczyk" class="button" target="_blank">
-    Wpłać mi 5 złoty
-  </a>
+<h1 id="main-title">💸 Daj mi swoje pieniądze 💸</h1>
+<p>Twój portfel płacze z przepełnienia? Ulżyj mu, wpłać trochę hajsu, a karma ci się odwdzięczy.</p>
 
-  <button class="button" onclick="toggleTheme()">🌗 Zmień motyw</button>
+<div class="buttons-row">
+  <a href="https://buycoffee.to/olekkosciuczyk" class="button" target="_blank">Wpłać mi 5 złoty</a>
+  <button class="button" id="random-amount">Losuj kwotę</button>
+  <button class="button" id="change-theme">Zmień motyw</button>
+</div>
 
-  <div id="stats">
-    <p id="visits"></p>
-    <p id="timeSpent"></p>
-    <p id="clicks"></p>
-  </div>
+<div class="stats" id="stats-panel">
+  <h3>Statystyki lokalne:</h3>
+  <p>Kliknięcia monet: <span id="click-count">0</span></p>
+  <p>Ostatnio wylosowana kwota: <span id="last-amount">0 zł</span></p>
+</div>
 
-  <div id="game1">
-    <p id="g1timer">Czas gry: 10s</p>
-    <p id="g1score">Kliknięcia: 0</p>
-    <p id="g1best">Twój rekord: 0</p>
-    <div id="coin">🪙</div>
-    <button class="button" onclick="startGame1()">🎮 Gra 1: Klikaj monetę</button>
-  </div>
+<div class="theme-row" id="theme-options">
+  <button class="theme-button" data-color="#0f3">Zielony banknot</button>
+  <button class="theme-button" data-color="#ff0">Słoneczny żółty</button>
+  <button class="theme-button" data-color="#f00">Ognisty czerwony</button>
+  <button class="theme-button" data-color="#0ff">Błękitny ocean</button>
+  <button class="theme-button" data-color="#f0f">Fioletowy vibe</button>
+  <button class="theme-button" data-color="#333">Tryb nocny</button>
+</div>
 
-  <div id="game2">
-    <p id="g2score">Kliknięcia w grze: 0</p>
-    <p id="g2best">Rekord gry 2: 0</p>
-    <button class="button" onclick="startGame2()">🎮 Gra 2: Losowe monety</button>
-  </div>
+<script>
+let clickCount = 0;
+let titleClick = 0;
 
-  <div id="music">🎧</div>
+const clickCounter = document.getElementById('click-count');
+const lastAmount = document.getElementById('last-amount');
+const randomButton = document.getElementById('random-amount');
+const title = document.getElementById('main-title');
+const changeThemeBtn = document.getElementById('change-theme');
+const themeOptions = document.getElementById('theme-options');
 
-  <footer>© 2025 Sigmo — dawaj hajs 💸</footer>
+randomButton.addEventListener('click', () => {
+  const amount = Math.floor(Math.random() * 50) + 1;
+  lastAmount.textContent = amount + ' zł';
+  clickCount++;
+  clickCounter.textContent = clickCount;
+});
 
-  <audio id="rickroll" src="https://www.myinstants.com/media/sounds/rickroll.mp3"></audio>
+// Easter egg: tytuł
+title.addEventListener('click', () => {
+  titleClick++;
+  if (titleClick === 3) {
+    window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+    titleClick = 0;
+  }
+});
 
-  <script>
-    // === STATY LOKALNE ===
-    let visits = localStorage.getItem("visits") || 0;
-    visits++;
-    localStorage.setItem("visits", visits);
+// Panel motywów
+themeOptions.addEventListener('click', (e) => {
+  if (e.target.classList.contains('theme-button')) {
+    document.body.style.backgroundColor = e.target.dataset.color;
+  }
+});
+</script>
 
-    let clicks = localStorage.getItem("clicks") || 0;
-    let timeSpent = localStorage.getItem("timeSpent") || 0;
-
-    document.getElementById("visits").innerText = "Odwiedziłeś stronę: " + visits + " razy";
-    document.getElementById("clicks").innerText = "Łączne kliknięcia: " + clicks;
-    document.getElementById("timeSpent").innerText = "Spędzony czas: " + timeSpent + "s";
-
-    setInterval(() => {
-      timeSpent++;
-      localStorage.setItem("timeSpent", timeSpent);
-      document.getElementById("timeSpent").innerText = "Spędzony czas: " + timeSpent + "s";
-      if (timeSpent == 300) {
-        document.body.style.filter = "grayscale(100%)";
-        alert("💀 Bieda mode aktywowany 💀");
-      }
-    }, 1000);
-
-    // === MUZYKA ===
-    document.getElementById("music").addEventListener("click", () => {
-      let audio = document.getElementById("rickroll");
-      if (audio.paused) audio.play(); else audio.pause();
-    });
-
-    // === ZMIANA MOTYWU ===
-    let dark = false;
-    function toggleTheme() {
-      dark = !dark;
-      if (dark) {
-        document.body.style.background = "#111";
-        document.body.style.color = "#eee";
-      } else {
-        document.body.style.background = "linear-gradient(135deg, #0f3, #00ff99)";
-        document.body.style.color = "#000";
-      }
-    }
-
-    // Easter egg: 3 kliki w tytuł
-    let titleClicks = 0;
-    document.getElementById("title").addEventListener("click", () => {
-      titleClicks++;
-      if (titleClicks == 3) {
-        toggleTheme();
-        titleClicks = 0;
-      }
-    });
-
-    // === GRA 1: Klikaj monetę ===
-    let g1best = localStorage.getItem("g1best") || 0;
-    let g1score = 0, g1time = 10, g1interval;
-    document.getElementById("g1best").innerText = "Twój rekord: " + g1best;
-
-    document.getElementById("coin").addEventListener("click", () => {
-      if (g1time > 0) {
-        g1score++;
-        clicks++;
-        localStorage.setItem("clicks", clicks);
-        document.getElementById("clicks").innerText = "Łączne kliknięcia: " + clicks;
-        document.getElementById("g1score").innerText = "Kliknięcia: " + g1score;
-      }
-    });
-
-    function startGame1() {
-      g1score = 0; g1time = 10;
-      document.getElementById("g1timer").innerText = "Czas gry: " + g1time + "s";
-      g1interval = setInterval(() => {
-        g1time--;
-        document.getElementById("g1timer").innerText = "Czas gry: " + g1time + "s";
-        if (g1time <= 0) {
-          clearInterval(g1interval);
-          if (g1score > g1best) {
-            g1best = g1score;
-            localStorage.setItem("g1best", g1best);
-            document.getElementById("g1best").innerText = "Twój rekord: " + g1best;
-            document.getElementById("title").innerText = "👑 Król monet — pobiłeś rekord! 👑";
-          }
-          alert("Gra skończona! Wynik: " + g1score);
-        }
-      }, 1000);
-    }
-
-    // === GRA 2: Losowe monety ===
-    let g2score = 0;
-    let g2best = localStorage.getItem("g2best") || 0;
-    document.getElementById("g2best").innerText = "Rekord gry 2: " + g2best;
-    let g2active = false;
-
-    function startGame2() {
-      if (g2active) return;
-      g2active = true;
-      g2score = 0;
-      document.getElementById("g2score").innerText = "Kliknięcia w grze: 0";
-
-      let time = 10;
-      let gameInterval = setInterval(() => {
-        spawnCoin();
-        time--;
-        if (time <= 0) {
-          clearInterval(gameInterval);
-          g2active = false;
-          if (g2score > g2best) {
-            g2best = g2score;
-            localStorage.setItem("g2best", g2best);
-            document.getElementById("g2best").innerText = "Rekord gry 2: " + g2best;
-            document.getElementById("title").innerText = "👑 Król monet — pobiłeś rekord! 👑";
-          }
-          alert("Gra 2 skończona! Wynik: " + g2score);
-        }
-      }, 1000);
-    }
-
-    function spawnCoin() {
-      let coin = document.createElement("div");
-      coin.innerText = "🪙";
-      coin.classList.add("coin");
-      coin.style.top = Math.random() * (window.innerHeight - 50) + "px";
-      coin.style.left = Math.random() * (window.innerWidth - 50) + "px";
-      document.body.appendChild(coin);
-
-      coin.addEventListener("click", () => {
-        g2score++;
-        clicks++;
-        localStorage.setItem("clicks", clicks);
-        document.getElementById("clicks").innerText = "Łączne kliknięcia: " + clicks;
-        document.getElementById("g2score").innerText = "Kliknięcia w grze: " + g2score;
-        coin.remove();
-      });
-
-      setTimeout(() => {
-        if (document.body.contains(coin)) coin.remove();
-      }, 900);
-    }
-  </script>
 </body>
 </html>
