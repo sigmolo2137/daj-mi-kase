@@ -8,12 +8,11 @@
     :root{
       --bg:#0f3;
       --fg:#000;
-      --card: rgba(255,255,255,0.85);
+      --card: rgba(255,255,255,0.88);
       --accent:#0070ba;
       --btn-text:#fff;
     }
-    /* dark theme vars */
-    .theme-dark { --bg:#111; --fg:#eee; --card: rgba(0,0,0,0.65); --accent:#444; --btn-text:#fff; }
+    .theme-dark { --bg:#111; --fg:#eee; --card: rgba(0,0,0,0.66); --accent:#444; --btn-text:#fff; }
     body {
       background: var(--bg);
       color: var(--fg);
@@ -26,152 +25,64 @@
       padding:18px;
       box-sizing:border-box;
       transition: background .35s ease, color .35s ease;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
     }
 
     header{ width:100%; max-width:980px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
     h1{
       font-size:clamp(1.6rem,4.5vw,2.4rem);
       margin:6px 0;
-      text-align:center;
       user-select:none;
       cursor:pointer;
       padding:6px;
     }
-    .sub {
-      max-width:980px;
-      text-align:center;
-      margin:6px 0 14px;
-      font-size:clamp(0.95rem,2.6vw,1.1rem);
-      opacity:0.95;
-    }
+    .sub { max-width:980px; text-align:center; margin:6px 0 14px; font-size:clamp(0.95rem,2.6vw,1.1rem); opacity:0.95; }
 
-    /* buttons row */
-    .controls {
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:center;
-      margin:8px 0 14px;
-    }
+    .controls { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:8px 0 14px; }
     .btn {
       background:var(--accent);
       color:var(--btn-text);
-      border:0;
-      border-radius:10px;
-      padding:10px 14px;
-      font-weight:700;
-      font-size:0.98rem;
-      cursor:pointer;
+      border:0; border-radius:10px; padding:10px 14px; font-weight:700; font-size:.98rem; cursor:pointer;
       box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-      transition: transform .12s ease, box-shadow .12s ease;
-      user-select:none;
     }
-    .btn:active{ transform:translateY(1px) scale(.995); }
-    .btn.secondary{ background:transparent; color:var(--fg); border:1px solid rgba(0,0,0,0.12); }
+    .btn.secondary { background:transparent; color:var(--fg); border:1px solid rgba(0,0,0,0.12); }
+    .btn:active{ transform: translateY(1px) scale(.995); }
 
-    /* layout: main + sidebar/ stats */
-    .grid {
-      width:100%;
-      max-width:980px;
-      display:grid;
-      grid-template-columns: 1fr 320px;
-      gap:18px;
-      align-items:start;
-    }
-    @media (max-width:900px){
-      .grid { grid-template-columns: 1fr; }
-    }
+    .grid { width:100%; max-width:980px; display:grid; grid-template-columns: 1fr 320px; gap:18px; align-items:start; }
+    @media (max-width:900px){ .grid { grid-template-columns: 1fr; } }
 
-    /* main area (games) */
-    .card {
-      background: var(--card);
-      border-radius:12px;
-      padding:14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    }
+    .card { background: var(--card); border-radius:12px; padding:14px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
 
-    .game-title { font-weight:800; margin-bottom:8px; }
-
-    .coin-big {
-      display:inline-block;
-      font-size:3.6rem;
-      line-height:1;
-      padding:8px;
-      border-radius:12px;
-      cursor:pointer;
-      user-select:none;
-      transition: transform .06s ease, box-shadow .12s ease;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-      background: linear-gradient(180deg, rgba(255,255,255,0.2), transparent);
-    }
+    .coin-big { display:inline-block; font-size:3.6rem; padding:8px; border-radius:12px; cursor:pointer; user-select:none; transition: transform .06s ease; box-shadow: 0 6px 14px rgba(0,0,0,0.12); background: linear-gradient(180deg, rgba(255,255,255,0.2), transparent); }
     .coin-big:active{ transform: scale(.96) rotate(-6deg); }
 
-    /* floating small timer */
-    .session-timer {
-      position:fixed;
-      top:12px;
-      right:12px;
-      background:var(--card);
-      color:var(--fg);
-      padding:8px 10px;
-      border-radius:10px;
-      font-weight:700;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      z-index:60;
-    }
+    .session-timer { position:fixed; top:12px; right:12px; background:var(--card); color:var(--fg); padding:8px 10px; border-radius:10px; font-weight:700; box-shadow: 0 8px 20px rgba(0,0,0,0.08); z-index:60; }
 
-    /* stats panel */
-    .stats {
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      min-width:220px;
-    }
+    .stats { display:flex; flex-direction:column; gap:8px; min-width:220px; }
     .stat-row{ display:flex; justify-content:space-between; align-items:center; padding:8px 6px; border-radius:8px; background: rgba(0,0,0,0.03); font-weight:700; }
     .stat-title{ opacity:0.85; font-weight:600; font-size:0.95rem; }
     .stat-value{ font-weight:800; color:var(--fg); }
 
-    /* theme panel */
     .themes { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:8px; }
     .theme-swatch{ width:38px; height:28px; border-radius:6px; cursor:pointer; border:2px solid rgba(255,255,255,0.2); box-shadow:0 4px 12px rgba(0,0,0,0.08); }
 
-    /* canvas drawer */
-    .drawer {
-      margin-top:12px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      align-items:center;
-    }
+    .drawer { margin-top:12px; display:flex; flex-direction:column; gap:8px; align-items:center; }
     canvas#drawCanvas { border-radius:8px; border:1px solid rgba(0,0,0,0.08); background:white; touch-action: none; }
 
-    footer{
-      width:100%;
-      max-width:980px;
-      margin-top:18px;
-      padding:10px 12px;
-      border-top:1px solid rgba(0,0,0,0.06);
-      text-align:center;
-      color:var(--fg);
-      opacity:0.9;
-      font-size:0.95rem;
-    }
+    footer{ width:100%; max-width:980px; margin-top:18px; padding:10px 12px; border-top:1px solid rgba(0,0,0,0.06); text-align:center; color:var(--fg); opacity:0.9; font-size:0.95rem; }
 
-    /* coin spawn game styling */
-    .spawn-coin {
-      position:absolute;
-      font-size:2.4rem;
-      cursor:pointer;
-      user-select:none;
-      transition: transform .08s ease;
-      text-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    }
+    .spawn-coin { position:absolute; font-size:2.4rem; cursor:pointer; user-select:none; transition: transform .08s ease; text-shadow:0 6px 18px rgba(0,0,0,0.12); }
 
-    /* VIP title style */
     .vip { color:gold; text-shadow: 0 2px 8px rgba(0,0,0,0.25); }
 
+    /* small form */
+    .guess-row { display:flex; gap:8px; align-items:center; margin-top:8px; flex-wrap:wrap; justify-content:center; }
+    input[type=number] { padding:8px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.12); width:120px; }
+    .hint { font-weight:700; margin-top:8px; opacity:0.95; }
+
+    @media (max-width:500px){
+      header { flex-direction:column; gap:10px; align-items:center; }
+      .session-timer{ right:8px; top:8px; }
+    }
   </style>
 </head>
 <body>
@@ -186,22 +97,22 @@
     </div>
   </header>
 
-  <p class="sub">Jesteś tu już chwilę — zrób dobry uczynek, zagraj albo narysuj coś. Wszystko jest local, nikt tu nie wyciąga twojego maila. </p>
+  <p class="sub">Jesteś tu już chwilę — zagraj, narysuj, albo po prostu rzuć mi piątaka. Wszystko lokalnie i chill.</p>
 
   <div class="grid" role="main">
-    <!-- MAIN COLUMN -->
+    <!-- MAIN -->
     <div class="card" style="position:relative;">
-      <!-- Controls row -->
+
       <div class="controls" style="justify-content:flex-start;">
         <button class="btn" id="btn-random">Losuj kwotę</button>
-        <button class="btn" id="btn-start-g1">Start — gra 1 (1 moneta 10s)</button>
-        <button class="btn" id="btn-start-g2">Start — gra 2 (spawn 10s)</button>
+        <button class="btn" id="btn-start-g1">Start — gra 1 (1 moneta, 10s)</button>
+        <button class="btn" id="btn-start-g2">Start — gra 2 (zgaduj, 1–100)</button>
         <button class="btn secondary" id="btn-reset-stats" title="Resetuje lokalne statsy">Reset statów</button>
       </div>
 
       <!-- Game 1 -->
       <section style="margin-top:10px;">
-        <div class="game-title">🎯 Gra 1 — Klikaj jedną monetę</div>
+        <div style="font-weight:800; margin-bottom:6px;">🎯 Gra 1 — Klikaj jedną monetę</div>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
           <div id="g1-timer" style="font-weight:800">Czas: 0s</div>
           <div id="g1-score" style="font-weight:800">Wynik: 0</div>
@@ -214,15 +125,22 @@
 
       <hr style="margin:14px 0; border:none; height:1px; background:rgba(0,0,0,0.06)">
 
-      <!-- Game 2 -->
+      <!-- Game 2: Zgadywanka -->
       <section>
-        <div class="game-title">🎮 Gra 2 — Łapające monety</div>
+        <div style="font-weight:800; margin-bottom:6px;">🎮 Gra 2 — Zgadnij liczbę 1–100</div>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
           <div id="g2-timer" style="font-weight:800">Czas: 0s</div>
-          <div id="g2-score" style="font-weight:800">Wynik: 0</div>
-          <div id="g2-best" style="font-weight:800">Rekord: 0</div>
+          <div id="g2-attempts" style="font-weight:800">Próby: 0</div>
+          <div id="g2-best" style="font-weight:800">Rekord (mniej lepsze): —</div>
         </div>
-        <div style="margin-top:12px; font-size:0.95rem; opacity:0.95;">Monety pojawiają się w losowych miejscach — klikaj je szybko!</div>
+
+        <div class="guess-row" id="g2-controls" style="margin-top:10px;">
+          <input type="number" id="g2-guess" min="1" max="100" placeholder="1–100" />
+          <button class="btn" id="g2-submit">Zgaduj</button>
+          <button class="btn secondary" id="g2-restart">Nowa liczba</button>
+        </div>
+
+        <div class="hint" id="g2-hint" aria-live="polite" style="min-height:22px;"></div>
       </section>
 
       <!-- Random amount result -->
@@ -240,7 +158,7 @@
 
     </div>
 
-    <!-- SIDEBAR: stats + themes -->
+    <!-- SIDEBAR -->
     <aside>
       <div class="card stats" style="width:320px; max-width:92vw;">
         <div style="font-weight:900; margin-bottom:6px;">📊 Twoje statystyki (lokalne)</div>
@@ -248,49 +166,44 @@
         <div class="stat-row"><div class="stat-title">Łączne kliknięcia:</div><div class="stat-value" id="stat-clicks">0</div></div>
         <div class="stat-row"><div class="stat-title">Łączny czas (s):</div><div class="stat-value" id="stat-time">0</div></div>
         <div class="stat-row"><div class="stat-title">Rekord G1 (10s):</div><div class="stat-value" id="stat-g1best">0</div></div>
-        <div class="stat-row"><div class="stat-title">Rekord G2 (10s):</div><div class="stat-value" id="stat-g2best">0</div></div>
+        <div class="stat-row"><div class="stat-title">Rekord G2 (min prób):</div><div class="stat-value" id="stat-g2best">—</div></div>
         <div style="margin-top:10px; font-size:0.95rem; opacity:0.9;">Motywy:</div>
-        <div class="themes" id="themeSwatches" style="margin-top:8px;">
-          <!-- swatches inserted by JS -->
-        </div>
+        <div class="themes" id="themeSwatches" style="margin-top:8px;"></div>
       </div>
     </aside>
   </div>
 
   <footer>
-    © 2025 Olek Kościuczyk — <a href="https://www.instagram.com/_sigmolocix_/" target="_blank" rel="noopener">@_sigmolocix_</a> • Link: <a href="https://buycoffee.to/olekkosciuczyk" target="_blank" rel="noopener">buycoffee.to</a>
+    © 2025 Olek Kościuczyk — <a href="https://www.instagram.com/_sigmolocix_/" target="_blank" rel="noopener">@_sigmolocix_</a> • <a href="https://buycoffee.to/olekkosciuczyk" target="_blank">buycoffee.to</a>
   </footer>
 
-  <!-- rickroll audio (toggle) -->
+  <!-- audio (rickroll fallback link used on toggle) -->
   <audio id="rickAudio" preload="none" src="https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4"></audio>
 
 <script>
-/* =======================
-   Local stats & init
-   ======================= */
+/* ========== Local storage keys & init ========== */
 const LS = {
   visits: 'dmk_visits',
   clicks: 'dmk_clicks',
   time: 'dmk_time',
   g1best: 'dmk_g1best',
-  g2best: 'dmk_g2best',
-  lastRandom: 'dmk_lastRandom'
+  g2best: 'dmk_g2best', // store minimal attempts (lower better); 0 = none
+  lastRandom: 'dmk_lastRandom',
+  theme: 'dmk_theme'
 };
-
-function num(v){return parseInt(v||0,10);}
+function num(v){ return parseInt(v||0,10); }
 let stats = {
   visits: num(localStorage.getItem(LS.visits)),
   clicks: num(localStorage.getItem(LS.clicks)),
   time: num(localStorage.getItem(LS.time)),
   g1best: num(localStorage.getItem(LS.g1best)),
-  g2best: num(localStorage.getItem(LS.g2best)),
+  g2best: num(localStorage.getItem(LS.g2best)), // 0 means no record
   lastRandom: localStorage.getItem(LS.lastRandom) || '0 zł'
 };
-// increment visits
 stats.visits++;
 localStorage.setItem(LS.visits, stats.visits);
 
-// ui nodes
+/* UI nodes */
 const elVisits = document.getElementById('stat-visits');
 const elClicks = document.getElementById('stat-clicks');
 const elTime = document.getElementById('stat-time');
@@ -303,110 +216,83 @@ function renderStatsUI(){
   elClicks.textContent = stats.clicks;
   elTime.textContent = stats.time;
   elG1best.textContent = stats.g1best;
-  elG2best.textContent = stats.g2best;
+  elG2best.textContent = stats.g2best > 0 ? stats.g2best + ' prób' : '—';
   elLastRandom.textContent = stats.lastRandom;
 }
 renderStatsUI();
 
-/* =======================
-   Session timer (top right) & total time accumulate
-   ======================= */
+/* ========== Session timer & total time accumulate ========== */
 let sessionSeconds = 0;
 const sessionTimerEl = document.getElementById('sessionTimer');
 setInterval(()=>{
   sessionSeconds++;
   sessionTimerEl.textContent = `Sesja: ${sessionSeconds}s`;
   stats.time++;
-  if(sessionSeconds % 5 === 0){ // save occasionally
+  if(sessionSeconds % 5 === 0){
     localStorage.setItem(LS.time, stats.time);
     renderStatsUI();
   } else {
     elTime.textContent = stats.time;
   }
-  // bieda mode after 5 minutes total time in storage
-  if (stats.time === 300) {
-    activateBiedaMode();
-  }
+  if(stats.time === 300) activateBiedaMode();
 },1000);
 
-/* =======================
-   Bieda mode
-   ======================= */
+/* ========== Bieda mode ========== */
 function activateBiedaMode(){
   document.body.style.filter = 'grayscale(100%)';
-  setTimeout(()=>alert('💀 Bieda mode: serio, idź ruszyć dupę i zarobić'),50);
+  setTimeout(()=>alert('💀 Bieda mode: serio, idź zarobić hajsy'),50);
 }
 
-/* =======================
-   CLICK HANDLER (coin button & global click counts)
-   ======================= */
+/* ========== Coin main click (counts toward total clicks) ========== */
 const coinBtn = document.getElementById('coin-btn');
-coinBtn.addEventListener('click', () => {
-  // allow clicking outside of active games so user still contributes to totalClicks
+coinBtn.addEventListener('click', ()=>{
   stats.clicks++;
   localStorage.setItem(LS.clicks, stats.clicks);
   elClicks.textContent = stats.clicks;
-  // small pop effect
   coinBtn.style.transform = 'scale(1.06) rotate(-6deg)';
   setTimeout(()=>coinBtn.style.transform = '',80);
 });
 
-/* =======================
-   Random amount button
-   ======================= */
-const btnRandom = document.getElementById('btn-random');
-btnRandom.addEventListener('click', ()=>{
-  const amount = (Math.floor(Math.random()*20)+1) * 5; // 5..100 step 5
+/* ========== Random amount button ========== */
+document.getElementById('btn-random').addEventListener('click', ()=>{
+  const amount = (Math.floor(Math.random()*20)+1)*5; // 5..100
   stats.lastRandom = `${amount} zł`;
   localStorage.setItem(LS.lastRandom, stats.lastRandom);
-  document.getElementById('last-random').textContent = stats.lastRandom;
-  // hint: open buy link with coffees param (optional)
-  // window.open(`https://buycoffee.to/olekkosciuczyk?c=${Math.ceil(amount/5)}`, '_blank');
+  elLastRandom.textContent = stats.lastRandom;
 });
 
-/* =======================
-   Game 1 - single coin 10s
-   ======================= */
+/* ========== Game 1 (unchanged) ========== */
 let g1Time = 10, g1Score = 0, g1Interval = null;
 const g1TimerEl = document.getElementById('g1-timer');
 const g1ScoreEl = document.getElementById('g1-score');
 const g1BestEl = document.getElementById('g1-best');
-
-g1BestEl.textContent = stats.g1best;
+g1BestEl.textContent = `Rekord: ${stats.g1best}`;
 
 function startG1(){
-  if(g1Interval) return; // already running
-  g1Score = 0;
-  g1Time = 10;
+  if(g1Interval) return;
+  g1Score = 0; g1Time = 10;
   g1TimerEl.textContent = `Czas: ${g1Time}s`;
   g1ScoreEl.textContent = `Wynik: ${g1Score}`;
   g1Interval = setInterval(()=>{
     g1Time--;
     g1TimerEl.textContent = `Czas: ${g1Time}s`;
-    if(g1Time <= 0){
-      clearInterval(g1Interval); g1Interval = null;
-      finishG1();
-    }
+    if(g1Time <= 0){ clearInterval(g1Interval); g1Interval = null; finishG1(); }
   },1000);
 }
 function finishG1(){
-  // update best
   if(g1Score > stats.g1best){
     stats.g1best = g1Score;
     localStorage.setItem(LS.g1best, stats.g1best);
     elG1best.textContent = stats.g1best;
-    // VIP crown title
     document.getElementById('title').classList.add('vip');
     document.getElementById('title').textContent = '👑 Król monet — pobiłeś rekord! 👑';
-    setTimeout(()=>{ /* keep title flashy for 6s then maybe reset */ }, 6000);
   }
-  alert(`Koniec! Wynik: ${g1Score}`);
-  // already counted clicks in coin click listener
+  alert(`Koniec! Wynik G1: ${g1Score}`);
   renderStatsUI();
 }
 document.getElementById('btn-start-g1').addEventListener('click', startG1);
 
-// coin click increments g1Score only during g1 active
+// coin increments G1 score if active
 coinBtn.addEventListener('click', ()=>{
   if(g1Interval){
     g1Score++;
@@ -414,95 +300,88 @@ coinBtn.addEventListener('click', ()=>{
   }
 });
 
-/* =======================
-   Game 2 - spawn coins 10s
-   ======================= */
+/* ========== Game 2 (ZGADYWANKA 1-100) ========== */
+let g2Target = null;
+let g2Attempts = 0;
 let g2Active = false;
-let g2Score = 0;
-let g2IntervalMain = null;
-const g2ScoreEl = document.getElementById('g2-score');
+let g2StartTime = 0;
+const g2TimerEl = document.getElementById('g2-timer');
+const g2AttemptsEl = document.getElementById('g2-attempts');
 const g2BestEl = document.getElementById('g2-best');
-g2BestEl.textContent = stats.g2best;
+const g2HintEl = document.getElementById('g2-hint');
+const g2GuessInput = document.getElementById('g2-guess');
+const g2SubmitBtn = document.getElementById('g2-submit');
+const g2RestartBtn = document.getElementById('g2-restart');
+
+g2BestEl.textContent = stats.g2best > 0 ? `Rekord: ${stats.g2best} prób` : 'Rekord: —';
 
 function startG2(){
   if(g2Active) return;
   g2Active = true;
-  g2Score = 0;
-  g2ScoreEl.textContent = `Wynik: ${g2Score}`;
-  let time = 10;
-  g2IntervalMain = setInterval(()=>{
-    spawnMovingCoin();
-    time--;
-    document.getElementById('g2-timer').textContent = `Czas: ${time}s`;
-    if(time <= 0){
-      clearInterval(g2IntervalMain);
-      g2Active = false;
-      finishG2();
-      document.getElementById('g2-timer').textContent = `Czas: 0s`;
+  g2Target = Math.floor(Math.random()*100)+1;
+  g2Attempts = 0;
+  g2StartTime = Date.now();
+  g2TimerEl.textContent = `Czas: 10s`;
+  g2AttemptsEl.textContent = `Próby: 0`;
+  g2HintEl.textContent = 'Zgadnij liczbę 1–100.';
+  // start 10s countdown UI only (optionally could enforce time)
+  let t = 10;
+  const timer = setInterval(()=>{
+    t--;
+    g2TimerEl.textContent = `Czas: ${t}s`;
+    if(t<=0){
+      clearInterval(timer);
+      if(g2Active){
+        endG2(false);
+      }
     }
-  }, 700); // spawn every 700ms
+  },1000);
 }
-function spawnMovingCoin(){
-  const c = document.createElement('div');
-  c.className = 'spawn-coin';
-  c.textContent = '🪙';
-  // random pos but not under header/footer. Use viewport
-  const w = Math.max(window.innerWidth, 300);
-  const h = Math.max(window.innerHeight, 300);
-  const left = Math.random()*(w-60);
-  const top = Math.random()*(h-160);
-  c.style.left = `${left}px`;
-  c.style.top = `${top}px`;
-  document.body.appendChild(c);
-  c.addEventListener('click', ()=>{
-    g2Score++;
-    stats.clicks++; localStorage.setItem(LS.clicks, stats.clicks); elClicks.textContent = stats.clicks;
-    g2ScoreEl.textContent = `Wynik: ${g2Score}`;
-    c.remove();
-  });
-  // auto-remove after 900ms
-  setTimeout(()=>{ if(document.body.contains(c)) c.remove(); }, 900);
+function submitGuess(){
+  if(!g2Active){ alert('Uruchom najpierw grę 2 — kliknij "Start — gra 2"'); return; }
+  const v = Number(g2GuessInput.value);
+  if(!v || v <1 || v>100) { g2HintEl.textContent = 'Wpisz liczbę 1–100!'; return; }
+  g2Attempts++;
+  stats.clicks++; localStorage.setItem(LS.clicks, stats.clicks); elClicks.textContent = stats.clicks;
+  g2AttemptsEl.textContent = `Próby: ${g2Attempts}`;
+  if(v === g2Target){
+    endG2(true);
+  } else if(v < g2Target){
+    g2HintEl.textContent = 'Więcej ➚';
+  } else {
+    g2HintEl.textContent = 'Mniej ➘';
+  }
+  g2GuessInput.value = '';
 }
-function finishG2(){
-  // update best
-  if(g2Score > stats.g2best){
-    stats.g2best = g2Score;
+function endG2(won){
+  g2Active = false;
+  if(!won){
+    alert(`Nie zdążyłeś zgadnąć. Szczęśliwa liczba to ${g2Target}.`);
+    g2HintEl.textContent = `Liczba: ${g2Target}`;
+    return;
+  }
+  // update best (store minimal attempts)
+  if(stats.g2best === 0 || g2Attempts < stats.g2best){
+    stats.g2best = g2Attempts;
     localStorage.setItem(LS.g2best, stats.g2best);
-    elG2best.textContent = stats.g2best;
+    elG2best.textContent = `Rekord: ${stats.g2best} prób`;
     document.getElementById('title').classList.add('vip');
     document.getElementById('title').textContent = '👑 Król monet — pobiłeś rekord! 👑';
   }
-  alert(`Koniec gry 2! Wynik: ${g2Score}`);
+  alert(`Brawo! Zgadłeś w ${g2Attempts} próbach.`);
   renderStatsUI();
 }
-document.getElementById('btn-start-g2').addEventListener('click', startG2);
+g2SubmitBtn.addEventListener('click', submitGuess);
+g2RestartBtn.addEventListener('click', ()=>{ g2Active=false; startG2(); });
 
-/* =======================
-   Random-calc: amount -> open buy link with count param (optional)
-   ======================= */
-document.getElementById('btn-random').addEventListener('click', ()=>{
-  const amount = (Math.floor(Math.random()*20)+1)*5; // 5..100
-  stats.lastRandom = `${amount} zł`;
-  localStorage.setItem(LS.lastRandom, stats.lastRandom);
-  document.getElementById('last-random').textContent = stats.lastRandom;
-  // optional: open buycoffee with coffees param => Math.ceil(amount/5)
-  // window.open(`https://buycoffee.to/olekkosciuczyk?c=${Math.ceil(amount/5)}`,'_blank');
-});
-
-/* =======================
-   Reset stats
-   ======================= */
+/* ========== Reset stats ========== */
 document.getElementById('btn-reset-stats').addEventListener('click', ()=>{
   if(!confirm('Na bank chcesz wyczyścić lokalne statsy?')) return;
   for(const k of Object.values(LS)) localStorage.removeItem(k);
-  stats = { visits:0, clicks:0, time:0, g1best:0, g2best:0, lastRandom:'0 zł' };
-  localStorage.setItem(LS.visits, 0);
   location.reload();
 });
 
-/* =======================
-   THEMES: 6 swatches + easter egg (3x title click toggles theme)
-   ======================= */
+/* ========== THEMES & swatches ========== */
 const THEMES = [
   {name:'Zielony banknot', bg: 'linear-gradient(135deg,#0f3,#baff00)', fg:'#000'},
   {name:'Słoneczny', bg: 'linear-gradient(135deg,#ffef6b,#ffb347)', fg:'#000'},
@@ -516,11 +395,10 @@ THEMES.forEach((t,i)=>{
   const s = document.createElement('div');
   s.className = 'theme-swatch';
   s.title = t.name;
-  if(t.bg.startsWith('linear')) s.style.background = t.bg;
-  else s.style.background = t.bg;
+  s.style.background = t.bg;
   s.addEventListener('click', ()=>{
     applyTheme(i);
-    localStorage.setItem('dmk_theme', i);
+    localStorage.setItem(LS.theme, i);
   });
   swatchesContainer.appendChild(s);
 });
@@ -528,90 +406,62 @@ function applyTheme(index){
   const t = THEMES[index];
   document.body.style.background = t.bg;
   document.body.style.color = t.fg;
-  // tweak card bg for readability
-  const cards = document.querySelectorAll('.card, .session-timer, footer, .stats');
+  const cards = document.querySelectorAll('.card, .session-timer, footer, .stats, .drawer');
   cards.forEach(c=>{
-    if (index === 5) c.style.background = 'rgba(0,0,0,0.6)';
-    else c.style.background = 'rgba(255,255,255,0.85)';
+    c.style.background = index===5 ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.88)';
   });
 }
-// restore theme
-const savedTheme = localStorage.getItem('dmk_theme');
-if(savedTheme){ applyTheme(Number(savedTheme)); }
+const savedTheme = localStorage.getItem(LS.theme);
+if(savedTheme !== null) applyTheme(Number(savedTheme));
 
-/* title click easter egg: 3 rapid clicks cycles to next theme */
+/* title rapid 3-click cycles theme (easter egg) */
 let tClicks = 0, tLast = 0;
 document.getElementById('title').addEventListener('click', ()=>{
   const now = Date.now();
   if(now - tLast < 600) tClicks++; else tClicks = 1;
   tLast = now;
   if(tClicks >= 3){
-    // cycle theme
-    let idx = Number(localStorage.getItem('dmk_theme') || 0);
+    let idx = Number(localStorage.getItem(LS.theme) || 0);
     idx = (idx + 1) % THEMES.length;
-    applyTheme(idx);
-    localStorage.setItem('dmk_theme', idx);
+    applyTheme(idx); localStorage.setItem(LS.theme, idx);
     tClicks = 0;
   }
 });
 
-/* =======================
-   RICKROLL / MUSIC toggle
-   ======================= */
+/* ========== RICKROLL / music toggle ========== */
 const rick = document.getElementById('rickAudio');
 const musicToggle = document.getElementById('musicToggle');
 musicToggle.addEventListener('click', ()=>{
-  // toggle play/pause
   if(rick.paused){
-    // try to play; if blocked, open youtube as fallback
     rick.play().catch(()=> window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ','_blank'));
     musicToggle.textContent = '🔊';
-  } else {
-    rick.pause();
-    musicToggle.textContent = '🎧';
-  }
+  } else { rick.pause(); musicToggle.textContent = '🎧'; }
 });
 
-/* =======================
-   DRAW CANVAS
-   ======================= */
+/* ========== DRAW CANVAS ========== */
 const canvas = document.getElementById('drawCanvas');
 const ctx = canvas.getContext('2d');
 let drawing=false, lastX=0, lastY=0;
 let drawColor = '#000';
 canvas.addEventListener('pointerdown', (e)=>{
-  drawing = true;
-  const r = canvas.getBoundingClientRect();
-  lastX = e.clientX - r.left;
-  lastY = e.clientY - r.top;
+  drawing = true; const r = canvas.getBoundingClientRect();
+  lastX = e.clientX - r.left; lastY = e.clientY - r.top;
 });
 canvas.addEventListener('pointerup', ()=>{ drawing=false; ctx.beginPath(); });
 canvas.addEventListener('pointercancel', ()=>{ drawing=false; ctx.beginPath(); });
 canvas.addEventListener('pointermove', (e)=>{
   if(!drawing) return;
   const r = canvas.getBoundingClientRect();
-  const x = e.clientX - r.left;
-  const y = e.clientY - r.top;
-  ctx.lineJoin = 'round';
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = drawColor;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(lastX, lastY);
-  ctx.lineTo(x,y);
-  ctx.stroke();
+  const x = e.clientX - r.left, y = e.clientY - r.top;
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.strokeStyle = drawColor; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
   lastX = x; lastY = y;
 });
-document.getElementById('clearCanvas').addEventListener('click', ()=>{
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-});
-document.getElementById('toggleDrawColor').addEventListener('click', ()=>{
-  drawColor = (drawColor === '#000') ? '#ff0066' : '#000';
-});
+document.getElementById('clearCanvas').addEventListener('click', ()=> ctx.clearRect(0,0,canvas.width,canvas.height));
+document.getElementById('toggleDrawColor').addEventListener('click', ()=> drawColor = (drawColor === '#000') ? '#ff0066' : '#000');
 
-/* =======================
-   Save stats periodically (safety)
-   ======================= */
+/* ========== Save stats periodically ========== */
 setInterval(()=> {
   localStorage.setItem(LS.clicks, stats.clicks);
   localStorage.setItem(LS.time, stats.time);
@@ -620,20 +470,32 @@ setInterval(()=> {
   localStorage.setItem(LS.lastRandom, stats.lastRandom);
 }, 5000);
 
-/* =======================
-   Ensure UI updated on load
-   ======================= */
-function elById(id){ return document.getElementById(id); }
-elById('g1-best').textContent = `Rekord: ${stats.g1best}`;
-elById('g2-best').textContent = `Rekord: ${stats.g2best}`;
-document.getElementById('last-random').textContent = stats.lastRandom;
+/* ========== Ensure UI reflects current stats ========== */
+function renderStatsUI(){ 
+  elVisits.textContent = stats.visits;
+  elClicks.textContent = stats.clicks;
+  elTime.textContent = stats.time;
+  elG1best.textContent = stats.g1best;
+  elG2best.textContent = stats.g2best > 0 ? stats.g2best + ' prób' : '—';
+  elLastRandom.textContent = stats.lastRandom;
+}
 renderStatsUI();
 
-/* =======================
-   Prevent text selection pestering on mobile/touch
-   ======================= */
-document.addEventListener('touchstart', ()=>{}, {passive:true});
-document.body.style.webkitTapHighlightColor = 'transparent';
+/* ========== Buttons wiring ========== */
+document.getElementById('btn-start-g1').addEventListener('click', startG1);
+document.getElementById('btn-start-g2').addEventListener('click', ()=>{ startG2(); });
+document.getElementById('btn-random').addEventListener('click', ()=>{ /* handled above */ });
+document.getElementById('btn-reset-stats').addEventListener('click', ()=>{ /* handled above */ });
+
+/* helper to update clicks UI */
+function updateClicksUI(){ elClicks.textContent = stats.clicks; }
+
+/* ========== g2 submit via Enter key ========== */
+document.getElementById('g2-guess').addEventListener('keypress', (e)=> { if(e.key === 'Enter') submitGuess(); });
+
+/* ========== utility expose for console debugging (optional) ========== */
+window._dmk = { stats, startG1, startG2 };
+
 </script>
 </body>
 </html>
